@@ -227,8 +227,6 @@ function renderPages() {
     pills.appendChild(btn);
   });
 
-  renderSuggestions();
-
   // Page view
   const pg = state.pages[currentPage];
   const view = document.getElementById("page-view");
@@ -247,10 +245,6 @@ function renderPages() {
           <div class="progress-fill" style="width:${pg.pct}%;background:${color}"></div>
         </div>
         <p class="progress-label">${pg.pct}% complete</p>
-      </div>
-      <div style="display:flex;gap:6px;margin-top:8px">
-        <button onclick="addPage(state.pages[currentPage].theme)" style="background:none;border:1px solid #818CF855;color:#818CF8;border-radius:6px;padding:5px 12px;font-size:12px;cursor:pointer">＋ Add page</button>
-        <button onclick="deletePage(currentPage)" style="background:none;border:1px solid #F8717133;color:#F87171;border-radius:6px;padding:5px 12px;font-size:12px;cursor:pointer">🗑 Delete</button>
       </div>
       <div class="page-stats">
         <div class="stat-box"><div class="stat-num" style="color:#818CF8">${cardCount}</div><div class="stat-lbl">Cards</div></div>
@@ -618,86 +612,6 @@ document.getElementById("modal-save").addEventListener("click", () => {
   renderPages();
   renderPrints();
 });
-
-
-// ── Page management ───────────────────────────────────────────────────────────
-function showToast(msg) {
-  const t = document.createElement("div");
-  t.textContent = msg;
-  t.style.cssText = "position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#1A1A2E;color:#E2E2F0;border:1px solid #2d2d48;border-radius:8px;padding:8px 16px;font-size:12px;z-index:999;pointer-events:none;white-space:nowrap";
-  document.body.appendChild(t);
-  setTimeout(() => t.remove(), 2500);
-}
-
-function deletePage(pageIdx) {
-  if (state.pages.length <= 1) { showToast("Can't delete the last page"); return; }
-  const pg = state.pages[pageIdx];
-  if (!confirm('Delete "' + pg.label + '" page?')) return;
-  state.pages.splice(pageIdx, 1);
-  if (currentPage >= state.pages.length) currentPage = state.pages.length - 1;
-  saveState();
-  renderPages();
-}
-
-function addPage(themeId) {
-  const theme = THEMES[themeId];
-  if (!theme) return;
-  const newId = Math.max(...state.pages.map(p => p.id)) + 1;
-  state.pages.push({
-    id: newId,
-    theme: themeId,
-    label: theme.label,
-    pct: 0,
-    slots: Array(12).fill(null).map(() => ({ type: "empty" }))
-  });
-  currentPage = state.pages.length - 1;
-  saveState();
-  renderPages();
-  showToast(theme.emoji + " " + theme.label + " page added");
-}
-
-function renderSuggestions() {
-  const container = document.getElementById("theme-suggestions");
-  if (!container) return;
-
-  // Find themes that have unassigned cards but no page
-  const assignedIds = new Set();
-  state.pages.forEach(pg => pg.slots.forEach(s => { if (s.cardId) assignedIds.add(s.cardId); }));
-
-  const waiting = {};
-  state.collection.forEach(c => {
-    if (c.theme && !assignedIds.has(c.id)) {
-      waiting[c.theme] = (waiting[c.theme] || 0) + 1;
-    }
-  });
-
-  const suggestions = Object.entries(waiting)
-    .filter(([theme]) => !state.pages.some(p => p.theme === theme))
-    .sort((a, b) => b[1] - a[1])
-    .slice(0, 3);
-
-  if (!suggestions.length) {
-    container.style.display = "none";
-    return;
-  }
-
-  container.style.display = "block";
-  container.innerHTML = '<div style="font-size:11px;color:var(--muted);font-weight:700;margin-bottom:6px">💡 Suggested pages</div>' +
-    suggestions.map(([themeId, count]) => {
-      const theme = THEMES[themeId];
-      if (!theme) return "";
-      return '<div style="display:flex;align-items:center;gap:8px;padding:7px 10px;border:1px solid ' + theme.color + '33;border-radius:8px;margin-bottom:5px">' +
-        '<span style="flex:1;font-size:12px;font-weight:600">' + theme.emoji + ' ' + theme.label + '</span>' +
-        '<span style="font-size:10px;color:' + theme.color + ';font-weight:700">' + count + ' card' + (count>1?'s':'') + ' waiting</span>' +
-        '<button data-theme="' + themeId + '" class="suggest-add-btn" style="background:' + theme.color + '33;border:1px solid ' + theme.color + '55;color:' + theme.color + ';border-radius:6px;padding:3px 8px;font-size:11px;cursor:pointer">+ Add page</button>' +
-        '</div>';
-    }).join("");
-
-  // Wire up the add buttons
-  container.querySelectorAll(".suggest-add-btn").forEach(btn => {
-    btn.addEventListener("click", () => addPage(btn.dataset.theme));
-  });
-}
 
 // ── Init ────────────────────────────────────────────────────────────────────
 renderPages();
