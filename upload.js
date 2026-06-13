@@ -191,7 +191,20 @@ function initUploadTab() {
     showReview();
   }
 
-  // Match detected cards to grid positions and crop their images
+  // Detect if image looks like a Collectr grid screenshot
+  function detectCollectrLayout(img) {
+    const W = img.naturalWidth, H = img.naturalHeight;
+    const isLandscape = W > H;
+    const ratio = W / H;
+    // Phone Collectr: tall portrait ~1290x2796, ratio ~0.46, H > W*1.8
+    if (!isLandscape && W >= 600 && H >= 1200 && H > W * 1.8) return "phone";
+    // iPad Collectr: landscape ~2752x2064, ratio ~1.33, very high res
+    // Distinguish from binder photos by requiring high pixel count (>4MP) + ~4:3 ratio
+    if (isLandscape && W >= 2400 && H >= 1800 && ratio > 1.2 && ratio < 1.5) return "ipad";
+    return null; // not a Collectr grid
+  }
+
+  // Match detected cards to images
   async function enrichWithImages(cards, resizedImages) {
     const allCrops = [];
 
@@ -200,47 +213,47 @@ function initUploadTab() {
       await new Promise(r => { img.onload = r; img.src = resized.url; });
 
       const W = img.naturalWidth, H = img.naturalHeight;
-      const isLandscape = W > H;
-      const cols = isLandscape ? 5 : 2;
-      const rows = 3;
+      const layout = detectCollectrLayout(img);
 
-      // Phone portrait: 2 cols — COL=[[12,635],[655,1278]], ROW=[[370,765],[1145,1540],[1920,2315]]
-      // iPad landscape: 5 cols — divide width by 5, detect row heights
-      if (!isLandscape && W < 1400) {
-        // Phone layout (original)
-        for (let row = 0; row < rows; row++) {
+      if (layout === "phone") {
+        // Phone Collectr: 2 columns, known grid positions
+        for (let row = 0; row < 3; row++) {
           for (let col = 0; col < 2; col++) {
             const crop = await cropCard(resized.url, col, row);
             if (crop) allCrops.push(crop);
           }
         }
-      } else if (isLandscape) {
-        // iPad/tablet landscape layout — 5 columns
-        const colW = Math.floor(W / cols);
-        const headerH = Math.floor(H * 0.04); // ~4% top bar
-        const rowH = Math.floor((H - headerH) / rows);
-        const artRatio = 0.55; // card art is top ~55% of each cell
-
-        for (let row = 0; row < rows; row++) {
-          for (let col = 0; col < cols; col++) {
-            const x1 = col * colW + Math.floor(colW * 0.03);
-            const x2 = x1 + Math.floor(colW * 0.94);
-            const y1 = headerH + row * rowH + Math.floor(rowH * 0.02);
-            const y2 = y1 + Math.floor(rowH * artRatio);
+      } else if (layout === "ipad") {
+        // iPad Collectr: 5 columns, measured coordinates
+        const colW = Math.floor(W / 5);
+        const headerH = 95;
+        const rowH = Math.floor((H - headerH) / 3);
+        const artH = Math.floor(rowH * 0.52);
+        const padX = Math.floor(colW * 0.04);
+        const padY = Math.floor(rowH * 0.02);
+        for (let row = 0; row < 3; row++) {
+          for (let col = 0; col < 5; col++) {
+            const x1 = col * colW + padX;
+            const x2 = (col + 1) * colW - padX;
+            const y1 = headerH + row * rowH + padY;
+            const y2 = headerH + row * rowH + artH;
             const crop = await cropRegionFromUrl(resized.url, x1, y1, x2, y2);
             if (crop) allCrops.push(crop);
           }
         }
       } else {
-        // Single card or unknown — use full image
-        allCrops.push(resized.url);
+        // Not a Collectr grid — physical card, binder, single card image, etc.
+        // Use the full image as the thumbnail for every detected card
+        // (all cards from this image share the same source photo)
+        for (let i = 0; i < cards.length; i++) {
+          allCrops.push(resized.url);
+        }
       }
     }
 
-    // Match cards to crops by index
     return cards.map((card, i) => ({
       ...card,
-      image: allCrops[i] || null,
+      image: allCrops[i] || resizedImages[0]?.url || null,
       theme: guessTheme(card.name),
     }));
   }
