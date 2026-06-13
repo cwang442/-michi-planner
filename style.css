@@ -216,10 +216,13 @@ body {
 .binder-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(3, 1fr);
   gap: 7px;
   padding: 10px;
   background: #020617;
   border-radius: 8px;
+  /* Lock to 3x4 = 12 pockets, matching Vault X binder */
+  aspect-ratio: 4 / 3.5;
 }
 
 /* ── Pocket ── */
@@ -232,6 +235,7 @@ body {
   overflow: hidden;
   position: relative;
   transition: transform 0.12s, box-shadow 0.12s;
+  min-height: 0; /* allow grid to control height */
 }
 .pocket:active { transform: scale(0.96); }
 .pocket.is-card { border-color: rgba(99,102,241,0.5); background: linear-gradient(135deg,#1e3a8a,#3730a3); }

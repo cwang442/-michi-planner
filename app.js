@@ -430,7 +430,9 @@ function renderPages() {
     if (slot.type === "print" && slot.span) {
       if (slot.span.cols > 1) div.style.gridColumn = `span ${slot.span.cols}`;
       if (slot.span.rows > 1) div.style.gridRow    = `span ${slot.span.rows}`;
-      div.style.aspectRatio = "unset"; // let the grid control dimensions
+      // Remove aspect-ratio so grid-template-rows controls the height
+      div.style.aspectRatio = "unset";
+      div.style.height = "100%";
     }
 
     div.addEventListener("click", () => openSlotModal(currentPage, i));
