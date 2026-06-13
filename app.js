@@ -625,6 +625,12 @@ function openSlotModal(pageIdx, slotIdx) {
   updatePrintPreview();
 
   modal.classList.remove("hidden");
+
+  // If it's a print slot with a search term and no image yet, focus the URL field
+  // so user is ready to paste immediately
+  if ((slot.type === "print") && !slot.url) {
+    setTimeout(() => document.getElementById("modal-print-url").focus(), 100);
+  }
 }
 
 function updateModalType(type) {
@@ -636,7 +642,9 @@ function updateModalType(type) {
 
 function updatePinterestLink() {
   const q = document.getElementById("modal-print-search").value || document.getElementById("modal-print-name").value || "";
-  document.getElementById("pinterest-link").href = `https://pinterest.com/search/pins/?q=${encodeURIComponent(q)}`;
+  const encoded = encodeURIComponent(q);
+  document.getElementById("pinterest-link").href = `https://pinterest.com/search/pins/?q=${encoded}`;
+  document.getElementById("google-link").href = `https://www.google.com/search?tbm=isch&q=${encoded}+pokemon+art+print+aesthetic`;
 }
 
 function updatePrintPreview() {
@@ -650,6 +658,7 @@ document.querySelectorAll(".type-btn").forEach(btn => {
   btn.addEventListener("click", () => updateModalType(btn.dataset.type));
 });
 document.getElementById("modal-print-search").addEventListener("input", updatePinterestLink);
+document.getElementById("modal-print-name").addEventListener("input", updatePinterestLink);
 document.getElementById("modal-print-url").addEventListener("input", updatePrintPreview);
 document.getElementById("modal-backdrop").addEventListener("click", () => document.getElementById("modal").classList.add("hidden"));
 document.getElementById("modal-cancel").addEventListener("click", () => document.getElementById("modal").classList.add("hidden"));

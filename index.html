@@ -115,14 +115,25 @@
       <div id="modal-print-fields" class="hidden">
         <label>Print description</label>
         <input type="text" id="modal-print-name" placeholder="e.g. Psyduck rainy day art" />
-        <label style="margin-top:12px">Search term for Pinterest</label>
+
+        <label style="margin-top:12px">Search term</label>
         <input type="text" id="modal-print-search" placeholder="e.g. Psyduck rain aesthetic art" />
-        <div class="modal-print-actions">
-          <a id="pinterest-link" href="#" target="_blank" class="pinterest-btn">📌 Open Pinterest</a>
+
+        <div class="print-find-btns">
+          <a id="pinterest-link" href="#" target="_blank" class="print-find-btn pinterest-btn">
+            📌 Pinterest
+          </a>
+          <a id="google-link" href="#" target="_blank" class="print-find-btn google-btn">
+            🖼️ Google Images
+          </a>
         </div>
-        <label style="margin-top:12px">Image URL <span class="optional">(paste after finding art)</span></label>
-        <input type="url" id="modal-print-url" placeholder="https://..." />
-        <img id="modal-print-preview" src="" alt="" class="print-preview hidden" />
+
+        <div class="print-url-section">
+          <label>Paste image URL here</label>
+          <p class="print-url-hint">Find art → tap and hold image → Copy Image → paste below</p>
+          <input type="url" id="modal-print-url" placeholder="https://..." />
+          <img id="modal-print-preview" src="" alt="" class="print-preview hidden" />
+        </div>
       </div>
       <div class="modal-actions">
         <button class="btn-primary" id="modal-save">Save</button>
