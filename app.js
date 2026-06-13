@@ -1,4 +1,6 @@
-// Michi Method Planner — app.js v4.1
+// Michi Method Planner — app.js v4.2
+console.log("app.js v4.2 loaded");
+document.querySelector(".subtitle")?.insertAdjacentText("beforeend", " · v4.2");
 // ── Themes ─────────────────────────────────────────────────────────────────
 const DEFAULT_THEMES = {
   teamrocket:   { label:"Team Rocket",    emoji:"🚀", color:"#E63946" },
