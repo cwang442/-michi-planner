@@ -773,3 +773,31 @@ body {
 .theme-choice-btn.active {
   border-width: 2px;
 }
+
+/* ── Add page pill ── */
+.add-page-pill {
+  border: 2px dashed var(--border) !important;
+  color: var(--muted) !important;
+  background: transparent !important;
+}
+.add-page-pill:hover { border-color: #818CF8 !important; color: #818CF8 !important; }
+
+/* ── Theme suggestions ── */
+.suggestions-header {
+  font-size: 11px;
+  color: var(--muted);
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+.suggestion-chip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  margin-bottom: 5px;
+  font-size: 12px;
+  font-weight: 600;
+}
+.suggestion-chip span:first-child { flex: 1; }

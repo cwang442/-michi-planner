@@ -432,6 +432,135 @@ function renderThemeManager() {
   modal.classList.remove("hidden");
 }
 
+
+// ── Theme suggestions ─────────────────────────────────────────────────────────
+function getSuggestedThemes() {
+  // Count cards per theme in collection
+  const collectionThemes = {};
+  state.collection.forEach(c => {
+    if (!c.theme) return;
+    collectionThemes[c.theme] = (collectionThemes[c.theme] || 0) + 1;
+  });
+
+  // Count card slots per theme across all pages
+  const pageThemes = {};
+  state.pages.forEach(pg => {
+    const cardSlots = pg.slots.filter(s => s.type === "card").length;
+    pageThemes[pg.theme] = (pageThemes[pg.theme] || 0) + cardSlots;
+  });
+
+  // Find themes where collection has cards but pages don't have enough room
+  const suggestions = [];
+  Object.entries(collectionThemes).forEach(([theme, count]) => {
+    const availableSlots = pageThemes[theme] || 0;
+    const assigned = state.pages.reduce((n, pg) => 
+      n + pg.slots.filter(s => s.type === "card" && s.cardId && 
+        state.collection.find(c => c.id === s.cardId)?.theme === theme).length, 0);
+    const unassigned = count - assigned;
+    if (unassigned > 0) {
+      suggestions.push({ theme, count, unassigned, availableSlots });
+    }
+  });
+
+  // Also find themes with cards but NO page at all
+  Object.entries(collectionThemes).forEach(([theme, count]) => {
+    const hasPage = state.pages.some(pg => pg.theme === theme);
+    if (!hasPage && !suggestions.find(s => s.theme === theme)) {
+      suggestions.push({ theme, count, unassigned: count, availableSlots: 0, noPage: true });
+    }
+  });
+
+  return suggestions.sort((a, b) => b.unassigned - a.unassigned);
+}
+
+function renderSuggestions() {
+  const suggestions = getSuggestedThemes();
+  const container = document.getElementById("theme-suggestions");
+  if (!container) return;
+
+  if (!suggestions.length) {
+    container.innerHTML = "";
+    container.style.display = "none";
+    return;
+  }
+
+  container.style.display = "block";
+  container.innerHTML = `
+    <div class="suggestions-header">💡 Suggested pages based on your collection</div>
+    ${suggestions.slice(0, 4).map(s => {
+      const theme = THEMES[s.theme];
+      if (!theme) return "";
+      const color = theme.color;
+      return `<div class="suggestion-chip" style="border-color:${color}44;background:${color}11" data-theme="${s.theme}">
+        <span>${theme.emoji} ${theme.label}</span>
+        <span style="color:${color};font-size:10px;font-weight:700">${s.unassigned} card${s.unassigned>1?"s":""} waiting</span>
+        <button class="add-suggested-page" data-theme="${s.theme}" 
+          style="background:${color}33;border:1px solid ${color}55;color:${color};border-radius:6px;padding:3px 8px;font-size:11px;cursor:pointer">
+          + Add page
+        </button>
+      </div>`;
+    }).join("")}
+  `;
+
+  container.querySelectorAll(".add-suggested-page").forEach(btn => {
+    btn.addEventListener("click", () => {
+      addPage(btn.dataset.theme);
+    });
+  });
+}
+
+
+// ── Page management ───────────────────────────────────────────────────────────
+
+function openAddPageModal() {
+  const modal = document.getElementById("add-page-modal");
+  const grid  = document.getElementById("add-page-theme-grid");
+  grid.innerHTML = "";
+
+  Object.entries(THEMES).forEach(([id, theme]) => {
+    const btn = document.createElement("button");
+    btn.className = "theme-choice-btn";
+    btn.style.cssText = `border-color:${theme.color};color:${theme.color}`;
+    btn.innerHTML = `<span style="font-size:20px">${theme.emoji}</span><span style="font-size:11px;font-weight:600;margin-top:3px">${theme.label}</span>`;
+    btn.addEventListener("click", () => {
+      modal.classList.add("hidden");
+      addPage(id);
+    });
+    grid.appendChild(btn);
+  });
+
+  document.getElementById("add-page-backdrop").addEventListener("click", () => modal.classList.add("hidden"));
+  modal.classList.remove("hidden");
+}
+
+function addPage(themeId) {
+  const theme = THEMES[themeId] || THEMES.teamrocket;
+  const newId = Math.max(...state.pages.map(p => p.id)) + 1;
+  const newPage = {
+    id: newId,
+    theme: themeId,
+    label: theme.label,
+    pct: 0,
+    slots: Array(12).fill(null).map(() => ({ type: "empty" })),
+  };
+  state.pages.push(newPage);
+  currentPage = state.pages.length - 1;
+  saveState();
+  renderPages();
+  showToast(`Added ${theme.emoji} ${theme.label} page`);
+}
+
+function deletePage(pageIdx) {
+  if (state.pages.length <= 1) { showToast("Can't delete the last page"); return; }
+  const pg = state.pages[pageIdx];
+  if (!confirm(`Delete "${pg.label}" page? Cards assigned to it will be unassigned.`)) return;
+  state.pages.splice(pageIdx, 1);
+  if (currentPage >= state.pages.length) currentPage = state.pages.length - 1;
+  saveState();
+  renderPages();
+  showToast("Page deleted");
+}
+
 // ── Pages tab ────────────────────────────────────────────────────────────────
 function renderPages() {
   const pills = document.getElementById("page-pills");
@@ -469,6 +598,16 @@ function renderPages() {
     document.getElementById("page-pills").after(autoBtn);
   }
 
+  // "+" add page pill
+  const addPill = document.createElement("button");
+  addPill.className = "page-pill add-page-pill";
+  addPill.textContent = "+ Page";
+  addPill.addEventListener("click", () => openAddPageModal());
+  pills.appendChild(addPill);
+
+  // Theme suggestions
+  renderSuggestions();
+
   document.getElementById("page-view").innerHTML = `
     <div class="page-header">
       <div style="flex:1">
@@ -479,6 +618,10 @@ function renderPages() {
         <div class="progress-bar"><div class="progress-fill" style="width:${pct}%;background:${color}"></div></div>
         <p class="progress-label">${pct}% complete</p>
       </div>
+      <button class="delete-page-btn" onclick="deletePage(${currentPage})" 
+        style="background:none;border:1px solid #F8717133;color:#F87171;border-radius:6px;padding:4px 10px;font-size:11px;cursor:pointer;margin-top:6px">
+        🗑 Delete page
+      </button>
       <div class="page-stats">
         <div class="stat-box"><div class="stat-num" style="color:#818CF8">${cardCount}</div><div class="stat-lbl">Cards</div></div>
         <div class="stat-box"><div class="stat-num" style="color:#C084FC">${printCount}</div><div class="stat-lbl">Prints</div></div>
