@@ -1,12 +1,12 @@
 const THEMES = {
-  teamrocket: { label:"Team Rocket",    emoji:"??", color:"#E63946" },
-  eeveelutions:{ label:"Eeveelutions", emoji:"??", color:"#C084FC" },
-  pink:        { label:"Pink Page",     emoji:"??", color:"#FFAFCC" },
-  green:       { label:"Green & Nature",emoji:"??", color:"#34D399" },
-  psyduck:     { label:"Psyduck",       emoji:"??", color:"#FFE135" },
+  teamrocket: { label:"Team Rocket",    emoji:"🚀", color:"#E63946" },
+  eeveelutions:{ label:"Eeveelutions", emoji:"🌈", color:"#C084FC" },
+  pink:        { label:"Pink Page",     emoji:"🩷", color:"#FFAFCC" },
+  green:       { label:"Green & Nature",emoji:"🌿", color:"#34D399" },
+  psyduck:     { label:"Psyduck",       emoji:"🦆", color:"#FFE135" },
   pikachu:     { label:"Pikachu",       emoji:"⚡", color:"#FFE135" },
-  sleeping:    { label:"Sleeping",      emoji:"??", color:"#818CF8" },
-  water:       { label:"Water & Ocean", emoji:"??", color:"#48CAE4" },
+  sleeping:    { label:"Sleeping",      emoji:"💤", color:"#818CF8" },
+  water:       { label:"Water & Ocean", emoji:"🌊", color:"#48CAE4" },
 };
 
 const RARITY_COLORS = {
@@ -181,7 +181,7 @@ let editingSlot = null; // {pageIdx, slotIdx}
 // ── Helpers ─────────────────────────────────────────────────────────────────
 function rc(rarity) { return RARITY_COLORS[rarity] || "#6B6B8F"; }
 function tc(theme)  { return THEMES[theme]?.color || "#818CF8"; }
-function te(theme)  { return THEMES[theme]?.emoji || "??"; }
+function te(theme)  { return THEMES[theme]?.emoji || "📄"; }
 function getCardById(id) { return state.collection.find(c => c.id === id); }
 
 function cardDisplayName(slot) {
@@ -304,7 +304,7 @@ function renderPages() {
     const div = document.createElement("div");
     div.className = "slot-item";
     div.innerHTML = `
-      <span class="slot-icon">${slot.type === "print" ? "??️" : slot.type === "card" ? "??" : "○"}</span>
+      <span class="slot-icon">${slot.type === "print" ? "🖨️" : slot.type === "card" ? "🃏" : "○"}</span>
       <span class="slot-name ${slot.name ? "filled" : ""}">${cardDisplayName(slot) || "Slot " + (i+1)}</span>
       ${slot.type === "print" && slot.url ? '<span class="slot-done">✓</span>' : ""}
     `;
@@ -314,7 +314,7 @@ function renderPages() {
 }
 
 function innerFallback(slot, i) {
-  const icon = slot.type === "print" ? "??️" : slot.type === "card" ? "??" : "＋";
+  const icon = slot.type === "print" ? "🖨️" : slot.type === "card" ? "🃏" : "＋";
   const name = cardDisplayName(slot) || ("slot " + (i+1));
   return `<div class="pocket-inner"><div class="pocket-icon">${icon}</div><div class="pocket-name">${name.split(" ").slice(0,4).join(" ")}</div></div>`;
 }
@@ -329,7 +329,7 @@ function renderCollection() {
   badge.textContent = state.collection.length + " cards";
 
   if (!state.collection.length) {
-    list.innerHTML = `<div style="text-align:center;padding:48px 24px;color:var(--muted)"><div style="font-size:48px;margin-bottom:12px;opacity:.4">??</div><p>No cards yet — upload some on the Upload tab</p></div>`;
+    list.innerHTML = `<div style="text-align:center;padding:48px 24px;color:var(--muted)"><div style="font-size:48px;margin-bottom:12px;opacity:.4">🃏</div><p>No cards yet — upload some on the Upload tab</p></div>`;
     return;
   }
 
@@ -380,86 +380,7 @@ document.getElementById("clear-collection").addEventListener("click", () => {
   }
 });
 
-// ── Upload tab ──────────────────────────────────────────────────────────────
-const uploadBtn  = document.getElementById("upload-btn");
-const fileInput  = document.getElementById("file-input");
-const previewDiv = document.getElementById("upload-preview");
-const cardForm   = document.getElementById("card-form");
-
-uploadBtn.addEventListener("click", () => fileInput.click());
-fileInput.addEventListener("change", e => handleFiles(e.target.files));
-
-const uploadZone = document.getElementById("upload-zone");
-uploadZone.addEventListener("dragover", e => { e.preventDefault(); uploadZone.classList.add("drag-over"); });
-uploadZone.addEventListener("dragleave", () => uploadZone.classList.remove("drag-over"));
-uploadZone.addEventListener("drop", e => { e.preventDefault(); uploadZone.classList.remove("drag-over"); handleFiles(e.dataTransfer.files); });
-
-function handleFiles(files) {
-  Array.from(files).filter(f => f.type.startsWith("image/")).forEach(file => {
-    const reader = new FileReader();
-    reader.onload = e => {
-      pendingImages.push({ url: e.target.result, name: file.name });
-      renderUploadPreview();
-      cardForm.classList.remove("hidden");
-    };
-    reader.readAsDataURL(file);
-  });
-}
-
-function renderUploadPreview() {
-  previewDiv.innerHTML = "";
-  pendingImages.forEach((img, i) => {
-    const wrap = document.createElement("div");
-    wrap.className = "preview-thumb";
-    wrap.innerHTML = `<img src="${img.url}" alt="${img.name}" /><button>×</button>`;
-    wrap.querySelector("button").addEventListener("click", () => {
-      pendingImages.splice(i, 1);
-      renderUploadPreview();
-      if (!pendingImages.length) cardForm.classList.add("hidden");
-    });
-    previewDiv.appendChild(wrap);
-  });
-}
-
-document.getElementById("save-card").addEventListener("click", () => {
-  const name  = document.getElementById("card-name").value.trim();
-  const set   = document.getElementById("card-set").value.trim();
-  const rarity= document.getElementById("card-rarity").value;
-  const price = document.getElementById("card-price").value;
-  const theme = document.getElementById("card-theme").value;
-
-  if (!name) { alert("Please enter a card name."); return; }
-
-  const card = {
-    id: Date.now() + Math.random(),
-    name, set, rarity, price, theme,
-    image: pendingImages[0]?.url || null
-  };
-
-  state.collection.push(card);
-  saveState();
-
-  // Reset
-  pendingImages = [];
-  previewDiv.innerHTML = "";
-  cardForm.classList.add("hidden");
-  document.getElementById("card-name").value = "";
-  document.getElementById("card-set").value = "";
-  document.getElementById("card-price").value = "";
-  document.getElementById("card-theme").value = "";
-  fileInput.value = "";
-
-  renderCollection();
-  renderPages();
-  alert(`"${card.name}" added to your collection!`);
-});
-
-document.getElementById("cancel-card").addEventListener("click", () => {
-  pendingImages = [];
-  previewDiv.innerHTML = "";
-  cardForm.classList.add("hidden");
-  fileInput.value = "";
-});
+// ── Upload tab — handled by upload.js ──────────────────────────────────────
 
 // ── Prints tab ──────────────────────────────────────────────────────────────
 function renderPrints() {
@@ -484,11 +405,11 @@ function renderPrints() {
     div.innerHTML = `
       <div>
         <div class="print-name">${p.url ? "✅ " : ""}${p.name}</div>
-        <div class="print-meta">?? ${p.search || p.name}</div>
+        <div class="print-meta">🔍 ${p.search || p.name}</div>
         <div class="print-meta">${p.pageLabel} · 7×9.5 cm · 4×6 glossy</div>
       </div>
       <a class="print-find" href="https://pinterest.com/search/pins/?q=${encodeURIComponent(p.search || p.name)}"
-        target="_blank" rel="noreferrer">?? Find</a>
+        target="_blank" rel="noreferrer">📌 Find</a>
     `;
     list.appendChild(div);
   });
