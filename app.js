@@ -221,18 +221,28 @@ const DEFAULT_PAGES = [
 ];
 
 // ── Storage ─────────────────────────────────────────────────────────────────
+const LAYOUT_VERSION = "v3-spans"; // bump this when DEFAULT_PAGES layout changes
+
 function loadState() {
   try {
-    return {
-      pages:      JSON.parse(localStorage.getItem("michi_pages"))      || DEFAULT_PAGES,
-      collection: JSON.parse(localStorage.getItem("michi_collection")) || [],
-    };
+    const savedVersion = localStorage.getItem("michi_layout_version");
+    const savedPages   = JSON.parse(localStorage.getItem("michi_pages"));
+    const collection   = JSON.parse(localStorage.getItem("michi_collection")) || [];
+
+    // If layout version changed or no saved pages, use fresh DEFAULT_PAGES
+    // but keep the collection
+    if (savedVersion !== LAYOUT_VERSION || !savedPages) {
+      return { pages: DEFAULT_PAGES, collection };
+    }
+
+    return { pages: savedPages, collection };
   } catch(e) {
     return { pages: DEFAULT_PAGES, collection: [] };
   }
 }
 
 function saveState() {
+  localStorage.setItem("michi_layout_version", LAYOUT_VERSION);
   localStorage.setItem("michi_pages",      JSON.stringify(state.pages));
   localStorage.setItem("michi_collection", JSON.stringify(state.collection));
 }
@@ -399,13 +409,9 @@ function renderPages() {
   // Pockets — with CSS grid span support
   const grid = document.getElementById("binder-grid");
   pg.slots.forEach((slot, i) => {
-    // Span slots are hidden — the anchor slot stretches to cover them
-    if (slot.type === "span") {
-      const hidden = document.createElement("div");
-      hidden.style.display = "none";
-      grid.appendChild(hidden);
-      return;
-    }
+    // Span slots are NOT added to the grid at all.
+    // The anchor's CSS gridColumn/gridRow span covers those positions.
+    if (slot.type === "span") return;
 
     const div = document.createElement("div");
     const anchor = getAnchorSlot(pg.slots, slot);
