@@ -607,14 +607,14 @@ function renderPages() {
         <span class="page-theme-badge" style="background:${color}22;border:1px solid ${color}44;color:${color}">
           ${te(pg.theme)} ${pg.label}
         </span>
-        <button id="change-theme-btn" style="margin-top:6px;background:none;border:1px solid var(--border);color:var(--muted);border-radius:6px;padding:4px 10px;font-size:11px;cursor:pointer">Change theme</button>
         <div class="progress-bar"><div class="progress-fill" style="width:${pct}%;background:${color}"></div></div>
         <p class="progress-label">${pct}% complete</p>
+        <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap">
+          <button id="change-theme-btn" style="background:none;border:1px solid var(--border);color:var(--muted);border-radius:6px;padding:5px 12px;font-size:12px;cursor:pointer">🎨 Theme</button>
+          <button id="add-page-btn" style="background:none;border:1px solid #818CF855;color:#818CF8;border-radius:6px;padding:5px 12px;font-size:12px;cursor:pointer">＋ Add page</button>
+          <button id="delete-page-btn" style="background:none;border:1px solid #F8717133;color:#F87171;border-radius:6px;padding:5px 12px;font-size:12px;cursor:pointer">🗑 Delete</button>
+        </div>
       </div>
-      <button class="delete-page-btn" onclick="deletePage(${currentPage})" 
-        style="background:none;border:1px solid #F8717133;color:#F87171;border-radius:6px;padding:4px 10px;font-size:11px;cursor:pointer;margin-top:6px">
-        🗑 Delete page
-      </button>
       <div class="page-stats">
         <div class="stat-box"><div class="stat-num" style="color:#818CF8">${cardCount}</div><div class="stat-lbl">Cards</div></div>
         <div class="stat-box"><div class="stat-num" style="color:#C084FC">${printCount}</div><div class="stat-lbl">Prints</div></div>
