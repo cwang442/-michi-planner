@@ -173,6 +173,12 @@ const DEFAULT_PAGES = [
   ]},
 ];
 
+// Load any custom themes saved by user
+try {
+  const custom = JSON.parse(localStorage.getItem("michi_custom_themes") || "{}");
+  Object.assign(THEMES, custom);
+} catch(e) {}
+
 // ── State ────────────────────────────────────────────────────────────────────
 function loadState() {
   try {
@@ -261,15 +267,48 @@ function addPage(themeId) {
 function openAddPageModal() {
   const modal = document.getElementById("add-page-modal");
   const grid  = document.getElementById("add-page-theme-grid");
+  const createDiv = document.getElementById("add-page-create-theme");
   grid.innerHTML = "";
-  Object.entries(THEMES).forEach(([id, theme]) => {
+
+  // Find themes with unassigned cards (suggest at top)
+  const assignedIds = new Set();
+  state.pages.forEach(pg => pg.slots.forEach(s => { if (s.cardId) assignedIds.add(s.cardId); }));
+  const waiting = {};
+  state.collection.forEach(c => {
+    if (c.theme && !assignedIds.has(c.id)) waiting[c.theme] = (waiting[c.theme]||0) + 1;
+  });
+
+  // Suggested themes first
+  const suggested = Object.entries(waiting).sort((a,b)=>b[1]-a[1]).map(([id])=>id);
+  const allThemes = [...new Set([...suggested, ...Object.keys(THEMES)])];
+
+  allThemes.forEach(id => {
+    const theme = THEMES[id]; if (!theme) return;
+    const count = waiting[id] || 0;
     const btn = document.createElement("button");
-    btn.style.cssText = `display:flex;flex-direction:column;align-items:center;padding:10px 6px;border:2px solid ${theme.color};color:${theme.color};background:transparent;border-radius:10px;cursor:pointer;gap:4px;font-size:11px;font-weight:600`;
-    btn.innerHTML = `<span style="font-size:20px">${theme.emoji}</span>${theme.label}`;
+    btn.style.cssText = `display:flex;flex-direction:column;align-items:center;padding:10px 6px;border:2px solid ${theme.color};color:${theme.color};background:${count>0?theme.color+"22":"transparent"};border-radius:10px;cursor:pointer;gap:3px;font-size:11px;font-weight:600;position:relative`;
+    btn.innerHTML = `<span style="font-size:20px">${theme.emoji}</span>${theme.label}${count>0?`<span style="font-size:9px;opacity:0.8">${count} waiting</span>`:""}`;
     btn.addEventListener("click", () => { modal.classList.add("hidden"); addPage(id); });
     grid.appendChild(btn);
   });
+
+  // Create new theme section
+  if (createDiv) createDiv.style.display = "block";
+
   document.getElementById("add-page-backdrop").onclick = () => modal.classList.add("hidden");
+  document.getElementById("new-theme-cancel").onclick  = () => modal.classList.add("hidden");
+  document.getElementById("new-theme-create").onclick  = () => {
+    const label = document.getElementById("new-theme-name").value.trim();
+    const emoji = document.getElementById("new-theme-emoji-input").value.trim() || "⭐";
+    const color = document.getElementById("new-theme-color-input").value;
+    if (!label) { showToast("Enter a theme name"); return; }
+    const id = label.toLowerCase().replace(/[^a-z0-9]/g,"");
+    if (THEMES[id]) { showToast("Theme already exists"); return; }
+    THEMES[id] = { label, emoji, color };
+    try { localStorage.setItem("michi_custom_themes", JSON.stringify(THEMES)); } catch(e){}
+    modal.classList.add("hidden");
+    addPage(id);
+  };
   modal.classList.remove("hidden");
 }
 
@@ -401,7 +440,7 @@ function renderPages() {
       if (slot.span.cols > 1) div.style.gridColumn = "span " + slot.span.cols;
       if (slot.span.rows > 1) div.style.gridRow    = "span " + slot.span.rows;
       div.style.aspectRatio = "unset";
-      div.style.minHeight   = "0";
+      div.style.height      = "100%";
     }
     div.addEventListener("click", () => openSlotModal(currentPage, i));
     const img = slotImage(anchor);
@@ -472,6 +511,14 @@ function openSlotModal(pageIdx, slotIdx) {
   printName.value   = slot.name   || "";
   printSearch.value = slot.search || "";
   printUrl.value    = slot.url    || "";
+  // Set span selector
+  const spanSel = document.getElementById("modal-span-size");
+  if (spanSel) {
+    const current = slot.span ? `${slot.span.cols}x${slot.span.rows}` : "1x1";
+    for (let i = 0; i < spanSel.options.length; i++) {
+      if (spanSel.options[i].value === current) { spanSel.selectedIndex = i; break; }
+    }
+  }
   updatePinterestLink(); updatePrintPreview();
   modal.classList.remove("hidden");
 }
@@ -517,6 +564,36 @@ document.getElementById("modal-save").addEventListener("click", () => {
     slot.name   = printName.value.trim()   || slot.name;
     slot.search = printSearch.value.trim();
     slot.url    = printUrl.value.trim();
+    // Apply span size
+    const spanSel = document.getElementById("modal-span-size");
+    if (spanSel && spanSel.value) {
+      const [cols, rows] = spanSel.value.split("x").map(Number);
+      const oldSpan = slot.span || {cols:1,rows:1};
+      slot.span = {cols, rows};
+      // If span changed, rebuild span slots
+      const pg = state.pages[editingSlot.pageIdx];
+      const slotIdx = editingSlot.slotIdx;
+      // First free any existing spans for this anchor
+      pg.slots.forEach((s, i) => {
+        if (s.type === "span" && s.anchorIdx === slotIdx) pg.slots[i] = {type:"empty"};
+      });
+      // Now fill new spans from adjacent empty slots
+      if (cols > 1 || rows > 1) {
+        const col0 = slotIdx % 4;
+        const row0 = Math.floor(slotIdx / 4);
+        for (let r = 0; r < rows; r++) {
+          for (let c = 0; c < cols; c++) {
+            if (r === 0 && c === 0) continue; // anchor itself
+            const targetIdx = (row0 + r) * 4 + (col0 + c);
+            if (targetIdx < pg.slots.length && pg.slots[targetIdx].type === "empty") {
+              pg.slots[targetIdx] = {type:"span", anchorIdx:slotIdx};
+            }
+          }
+        }
+      }
+    } else if (!slot.span) {
+      slot.span = {cols:1, rows:1};
+    }
   } else {
     slot.type = "empty"; slot.cardId = null; slot.url = "";
     delete slot.span;

@@ -114,6 +114,16 @@
         <input type="text" id="modal-print-name" placeholder="e.g. Psyduck rainy day art" />
         <label style="margin-top:4px">Search term</label>
         <input type="text" id="modal-print-search" placeholder="e.g. Psyduck rain aesthetic art" />
+        <label style="margin-top:4px">Print size <span class="optional">(how many pockets it spans)</span></label>
+        <select id="modal-span-size">
+          <option value="1x1">1×1 — Single pocket</option>
+          <option value="2x1">2×1 — Two pockets wide</option>
+          <option value="3x1">3×1 — Three pockets wide</option>
+          <option value="4x1">4×1 — Full row panorama</option>
+          <option value="1x2">1×2 — Two pockets tall</option>
+          <option value="2x2">2×2 — Four pocket square</option>
+          <option value="3x2">3×2 — Six pocket large</option>
+        </select>
         <div class="print-find-btns">
           <a id="pinterest-link" href="#" target="_blank" class="print-find-btn">📌 Pinterest</a>
           <a id="google-link" href="#" target="_blank" class="print-find-btn">🖼️ Google Images</a>
@@ -200,8 +210,18 @@
     <div class="modal-backdrop" id="add-page-backdrop"></div>
     <div class="modal-box">
       <h3>Add a New Page</h3>
-      <p style="font-size:12px;color:var(--muted);margin-bottom:12px">Choose a theme</p>
-      <div id="add-page-theme-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:8px"></div>
+      <p style="font-size:12px;color:var(--muted);margin-bottom:10px">Choose a theme — themes with waiting cards shown first</p>
+      <div id="add-page-theme-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px"></div>
+      <div id="add-page-create-theme" style="border-top:1px solid var(--border);padding-top:12px">
+        <p style="font-size:11px;font-weight:700;color:var(--muted);margin-bottom:8px">✨ Create a new theme</p>
+        <input id="new-theme-name" class="modal-input" placeholder="Theme name (e.g. Dark & Spooky)" style="margin-bottom:8px" />
+        <div style="display:flex;gap:8px;margin-bottom:8px">
+          <input id="new-theme-emoji-input" class="modal-input" placeholder="🔮 Emoji" style="width:70px;flex-shrink:0" maxlength="2" />
+          <input id="new-theme-color-input" type="color" value="#818CF8" style="width:44px;height:38px;border:1px solid var(--border);border-radius:6px;background:var(--surface);cursor:pointer;flex-shrink:0" />
+          <button id="new-theme-create" class="btn-primary" style="flex:1">Create & Add Page</button>
+        </div>
+        <button id="new-theme-cancel" class="btn-ghost" style="width:100%">Cancel</button>
+      </div>
     </div>
   </div>
 
