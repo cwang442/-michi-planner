@@ -528,6 +528,7 @@ function renderCollection() {
           <div class="coll-set">${card.set||""}${card.set&&card.rarity?" · ":""}<span style="color:${color};font-size:10px">${card.rarity||""}</span></div>
         </div>
         <div style="display:flex;align-items:center;gap:8px;flex-shrink:0">
+          ${card.qty > 1 ? `<span style="background:#F59E0B22;border:1px solid #F59E0B44;color:#F59E0B;border-radius:99px;padding:2px 7px;font-size:10px;font-weight:700">×${card.qty}</span>` : ""}
           <div class="coll-price">${card.price?"$"+parseFloat(card.price).toFixed(2):""}</div>
           <button class="edit-card-btn" data-id="${card.id}" style="background:none;border:1px solid var(--border);border-radius:6px;color:var(--muted);padding:4px 8px;font-size:11px;cursor:pointer">Edit</button>
         </div>

@@ -291,12 +291,17 @@ function initUploadTab() {
   function renderReview(cards) {
     reviewList.innerHTML = "";
     cards.forEach((card, i) => {
+      const isDupe = state.collection.some(c =>
+        c.name.toLowerCase() === (card.name||"").toLowerCase() &&
+        (c.set||"").toLowerCase() === (card.set||"").toLowerCase()
+      );
       const div = document.createElement("div");
-      div.className = "review-card";
+      div.className = "review-card" + (isDupe ? " review-dupe" : "");
       div.innerHTML = `
         <img class="review-img" src="${card.image||""}" alt="${escHtml(card.name)}"
           onerror="this.style.background='#1A1A2E';this.removeAttribute('src')" />
         <div class="review-fields">
+          ${isDupe ? `<div class="dupe-warning">⚠️ Already in collection — add anyway or remove</div>` : ""}
           <input class="review-input" placeholder="Card name *" value="${escHtml(card.name)}" />
           <input class="review-input" placeholder="Set name" value="${escHtml(card.set)}" />
           <div class="review-row">
@@ -341,11 +346,14 @@ function initUploadTab() {
     let added = 0;
     pendingCards.forEach(card => {
       if (!card.name?.trim()) return;
-      const exists = state.collection.some(c =>
-        c.name.toLowerCase() === card.name.toLowerCase() &&
-        (c.set||"").toLowerCase() === (card.set||"").toLowerCase()
+      // Check for existing — increment qty if duplicate, add new if not
+      const existing = state.collection.find(c =>
+        c.name.toLowerCase() === card.name.trim().toLowerCase() &&
+        (c.set||"").toLowerCase() === (card.set||"").trim().toLowerCase()
       );
-      if (!exists) {
+      if (existing) {
+        existing.qty = (existing.qty || 1) + 1;
+      } else {
         state.collection.push({
           id:     Date.now() + Math.random(),
           name:   card.name.trim(),
@@ -354,9 +362,10 @@ function initUploadTab() {
           price:  card.price  || "",
           theme:  card.theme  || "",
           image:  card.image  || null,
+          qty:    1,
         });
-        added++;
       }
+      added++;
     });
 
     saveState();
