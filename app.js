@@ -26,72 +26,149 @@ const RARITY_COLORS = {
 
 // ── Default pages — empty slots, no hardcoded cards ────────────────────────
 const DEFAULT_PAGES = [
+
+  // PAGE 1: Team Rocket — villain energy
+  // [P1x2][c ][c ][c ]  tall dark portrait left, cards scattered right
+  // [S   ][c ][c ][c ]
+  // [c   ][P3x1][S][S]  single card + dramatic 3-wide bottom
   { id:1, theme:"teamrocket", label:"Team Rocket — Page 1", pct:0, slots:[
-    {type:"card",cardId:null,name:""},{type:"card",cardId:null,name:""},
-    {type:"print",name:"Team Rocket hideout art",search:"Team Rocket hideout dark Pokemon anime aesthetic art",url:"",span:{cols:2,rows:2}},{type:"span",anchorIdx:2},
-    {type:"card",cardId:null,name:""},{type:"card",cardId:null,name:""},
-    {type:"span",anchorIdx:2},{type:"span",anchorIdx:2},
-    {type:"card",cardId:null,name:""},{type:"card",cardId:null,name:""},
-    {type:"print",name:"Jessie James Meowth art",search:"Jessie James Meowth blasting off anime art",url:"",span:{cols:2,rows:1}},{type:"span",anchorIdx:10},
-  ]},
-  { id:2, theme:"teamrocket", label:"Team Rocket — Page 2", pct:0, slots:[
+    {type:"print",name:"Team Rocket hideout art",search:"Team Rocket dark hideout lair aesthetic art",url:"",span:{cols:1,rows:2}},
     {type:"card",cardId:null,name:""},{type:"card",cardId:null,name:""},{type:"card",cardId:null,name:""},
-    {type:"print",name:"Team Rocket R logo art",search:"Team Rocket R logo dark dramatic art",url:"",span:{cols:1,rows:3}},
+    {type:"span",anchorIdx:0},
+    {type:"card",cardId:null,name:""},{type:"card",cardId:null,name:""},{type:"card",cardId:null,name:""},
     {type:"card",cardId:null,name:""},
-    {type:"print",name:"Team Rocket blasting off",search:"Team Rocket blasting off sky anime art",url:"",span:{cols:3,rows:1}},{type:"span",anchorIdx:5},{type:"span",anchorIdx:5},
-    {type:"print",name:"N trainer art",search:"N trainer Pokemon Black White aesthetic art",url:"",span:{cols:4,rows:1}},{type:"span",anchorIdx:8},{type:"span",anchorIdx:8},{type:"span",anchorIdx:8},
+    {type:"print",name:"Jessie James Meowth art",search:"Jessie James Meowth blasting off anime art",url:"",span:{cols:3,rows:1}},
+    {type:"span",anchorIdx:9},{type:"span",anchorIdx:9},
   ]},
-  { id:3, theme:"eeveelutions", label:"Eeveelutions", pct:0, slots:[
-    {type:"card",cardId:null,name:""},{type:"card",cardId:null,name:""},{type:"card",cardId:null,name:""},
-    {type:"print",name:"Eevee cozy forest art",search:"Eevee sitting cozy forest illustration aesthetic",url:"",span:{cols:1,rows:3}},
-    {type:"print",name:"All Eeveelutions group",search:"all eeveelutions together rainbow illustration art",url:"",span:{cols:2,rows:1}},{type:"span",anchorIdx:4},
-    {type:"print",name:"Espeon Umbreon moonlight",search:"Espeon Umbreon night moonlight together art",url:"",span:{cols:2,rows:1}},{type:"span",anchorIdx:3},
-    {type:"print",name:"Vaporeon ocean waves",search:"Vaporeon ocean swimming watercolour illustration",url:"",span:{cols:2,rows:1}},{type:"span",anchorIdx:8},
-    {type:"print",name:"Sylveon ribbon fairy",search:"Sylveon fairy ribbon pastel illustration art",url:"",span:{cols:2,rows:1}},{type:"span",anchorIdx:3},
-  ]},
-  { id:4, theme:"pink", label:"Pink Page", pct:0, slots:[
-    {type:"card",cardId:null,name:""},{type:"card",cardId:null,name:""},{type:"card",cardId:null,name:""},{type:"card",cardId:null,name:""},
-    {type:"card",cardId:null,name:""},{type:"card",cardId:null,name:""},{type:"card",cardId:null,name:""},{type:"card",cardId:null,name:""},
+
+  // PAGE 2: Team Rocket — explosive chaos
+  // [c][c][P2x2][S  ]  cards + big 2x2 square dramatic print
+  // [c][c][S   ][S  ]
+  // [P3x1][S][S][c  ]  explosive 3-wide bottom + card corner
+  { id:2, theme:"teamrocket", label:"Team Rocket — Page 2", pct:0, slots:[
     {type:"card",cardId:null,name:""},{type:"card",cardId:null,name:""},
-    {type:"print",name:"Clefairy moon pink art",search:"Clefairy moon night pink pastel stars illustration",url:"",span:{cols:2,rows:1}},{type:"span",anchorIdx:10},
-  ]},
-  { id:5, theme:"green", label:"Green & Nature", pct:0, slots:[
-    {type:"card",cardId:null,name:""},{type:"card",cardId:null,name:""},
-    {type:"print",name:"Venusaur forest art",search:"Venusaur lush forest botanical illustration art",url:"",span:{cols:2,rows:2}},{type:"span",anchorIdx:2},
+    {type:"print",name:"Team Rocket blasting off",search:"Team Rocket blasting off dramatic sky explosion anime art",url:"",span:{cols:2,rows:2}},
+    {type:"span",anchorIdx:2},
     {type:"card",cardId:null,name:""},{type:"card",cardId:null,name:""},
     {type:"span",anchorIdx:2},{type:"span",anchorIdx:2},
-    {type:"print",name:"Chikorita meadow art",search:"Chikorita meadow flowers Gen 2 illustration art",url:"",span:{cols:4,rows:1}},{type:"span",anchorIdx:8},{type:"span",anchorIdx:8},{type:"span",anchorIdx:8},
+    {type:"print",name:"N trainer art",search:"N trainer Pokemon Black White dramatic aesthetic art",url:"",span:{cols:3,rows:1}},
+    {type:"span",anchorIdx:8},{type:"span",anchorIdx:8},
+    {type:"card",cardId:null,name:""},
   ]},
+
+  // PAGE 3: Eeveelutions — flowing rainbow
+  // [c][P3x1][S  ][S  ]  card + 3-wide panorama across top
+  // [c][P1x2][P2x1][S ]  card + tall portrait + 2-wide
+  // [c][S   ][P2x1][S ]  card + span + 2-wide bottom
+  { id:3, theme:"eeveelutions", label:"Eeveelutions", pct:0, slots:[
+    {type:"card",cardId:null,name:""},
+    {type:"print",name:"All Eeveelutions panorama",search:"all eeveelutions together rainbow panorama illustration art",url:"",span:{cols:3,rows:1}},
+    {type:"span",anchorIdx:1},{type:"span",anchorIdx:1},
+    {type:"card",cardId:null,name:""},
+    {type:"print",name:"Eevee cozy forest art",search:"Eevee cozy forest sitting illustration aesthetic art",url:"",span:{cols:1,rows:2}},
+    {type:"print",name:"Espeon Umbreon moonlight",search:"Espeon Umbreon night moonlight together art",url:"",span:{cols:2,rows:1}},
+    {type:"span",anchorIdx:6},
+    {type:"card",cardId:null,name:""},
+    {type:"span",anchorIdx:5},
+    {type:"print",name:"Vaporeon Sylveon art",search:"Vaporeon Sylveon fairy water pastel illustration art",url:"",span:{cols:2,rows:1}},
+    {type:"span",anchorIdx:10},
+  ]},
+
+  // PAGE 4: Pink — soft and balanced
+  // [P2x1][S][c][c]  2-wide print left top + cards right
+  // [c][c][P2x2][S]  cards + 2x2 square right
+  // [c][c][S   ][S]  cards + span continues
+  { id:4, theme:"pink", label:"Pink Page", pct:0, slots:[
+    {type:"print",name:"Clefairy moon pink art",search:"Clefairy moon night pink pastel stars illustration",url:"",span:{cols:2,rows:1}},
+    {type:"span",anchorIdx:0},
+    {type:"card",cardId:null,name:""},{type:"card",cardId:null,name:""},
+    {type:"card",cardId:null,name:""},{type:"card",cardId:null,name:""},
+    {type:"print",name:"Fairy Pokemon pink art",search:"Clefable Wigglytuff Togekiss pink fairy Pokemon pastel art",url:"",span:{cols:2,rows:2}},
+    {type:"span",anchorIdx:6},
+    {type:"card",cardId:null,name:""},{type:"card",cardId:null,name:""},
+    {type:"span",anchorIdx:6},{type:"span",anchorIdx:6},
+  ]},
+
+  // PAGE 5: Green & Nature — organic asymmetric
+  // [P2x1][S][c][c]   2-wide botanical print left + cards
+  // [P1x2][c][c][c]   tall portrait left + cards right
+  // [S   ][c][P2x1][S] span + card + 2-wide right
+  { id:5, theme:"green", label:"Green & Nature", pct:0, slots:[
+    {type:"print",name:"Forest of Vitality art",search:"Pokemon forest vitality lush botanical landscape art",url:"",span:{cols:2,rows:1}},
+    {type:"span",anchorIdx:0},
+    {type:"card",cardId:null,name:""},{type:"card",cardId:null,name:""},
+    {type:"print",name:"Venusaur forest portrait",search:"Venusaur lush forest botanical portrait illustration art",url:"",span:{cols:1,rows:2}},
+    {type:"card",cardId:null,name:""},{type:"card",cardId:null,name:""},{type:"card",cardId:null,name:""},
+    {type:"span",anchorIdx:4},
+    {type:"card",cardId:null,name:""},
+    {type:"print",name:"Chikorita meadow art",search:"Chikorita Bayleef meadow flowers Gen 2 illustration art",url:"",span:{cols:2,rows:1}},
+    {type:"span",anchorIdx:10},
+  ]},
+
+  // PAGE 6: Psyduck — melancholy rain, maximalist prints
+  // [c][P3x1][S  ][S  ]  1 card + 3-wide rainy panorama
+  // [P2x1][S][P2x1][S ]  two 2-wide prints middle
+  // [P4x1][S][S  ][S  ]  full 4-wide dramatic bottom
   { id:6, theme:"psyduck", label:"Psyduck", pct:0, slots:[
     {type:"card",cardId:null,name:""},
-    {type:"print",name:"Psyduck rainy day art",search:"Psyduck rain puddle sad aesthetic illustration",url:"",span:{cols:3,rows:1}},{type:"span",anchorIdx:1},{type:"span",anchorIdx:1},
-    {type:"print",name:"Psyduck headache art",search:"Psyduck headache confused cute art",url:"",span:{cols:2,rows:1}},{type:"span",anchorIdx:4},
-    {type:"print",name:"Misty and Psyduck art",search:"Misty Psyduck Pokemon anime together illustration",url:"",span:{cols:2,rows:1}},{type:"span",anchorIdx:6},
-    {type:"print",name:"Psyduck bathtub art",search:"Psyduck bathtub rubber duck cute cozy art",url:"",span:{cols:2,rows:1}},{type:"span",anchorIdx:8},
-    {type:"print",name:"Psyduck vintage retro art",search:"Psyduck vintage retro 90s anime style illustration",url:"",span:{cols:2,rows:1}},{type:"span",anchorIdx:10},
+    {type:"print",name:"Psyduck rainy day art",search:"Psyduck rain puddle sad melancholy aesthetic illustration",url:"",span:{cols:3,rows:1}},
+    {type:"span",anchorIdx:1},{type:"span",anchorIdx:1},
+    {type:"print",name:"Psyduck headache art",search:"Psyduck headache confused squinting cute art",url:"",span:{cols:2,rows:1}},
+    {type:"span",anchorIdx:4},
+    {type:"print",name:"Misty and Psyduck art",search:"Misty Psyduck Pokemon anime together illustration",url:"",span:{cols:2,rows:1}},
+    {type:"span",anchorIdx:6},
+    {type:"print",name:"Psyduck bathtub art",search:"Psyduck bathtub rubber duck cozy cute illustration art",url:"",span:{cols:4,rows:1}},
+    {type:"span",anchorIdx:8},{type:"span",anchorIdx:8},{type:"span",anchorIdx:8},
   ]},
+
+  // PAGE 7: Pikachu — electric burst, energetic
+  // [P4x1][S][S][S]   full 4-wide electric panorama top
+  // [c][c][P2x1][S]   cards + 2-wide middle
+  // [c][P1x2][c][c]   card + tall Pikachu portrait + cards
   { id:7, theme:"pikachu", label:"Pikachu", pct:0, slots:[
+    {type:"print",name:"Pikachu electric panorama",search:"Pikachu electric lightning bolt panorama anime aesthetic art",url:"",span:{cols:4,rows:1}},
+    {type:"span",anchorIdx:0},{type:"span",anchorIdx:0},{type:"span",anchorIdx:0},
     {type:"card",cardId:null,name:""},{type:"card",cardId:null,name:""},
-    {type:"print",name:"Pikachu forest sitting",search:"Pikachu sitting forest peaceful illustration art",url:"",span:{cols:2,rows:2}},{type:"span",anchorIdx:2},
+    {type:"print",name:"Pikachu Ash together",search:"Pikachu Ash Ketchum together Pokemon anime illustration art",url:"",span:{cols:2,rows:1}},
+    {type:"span",anchorIdx:6},
+    {type:"card",cardId:null,name:""},
+    {type:"print",name:"Pikachu forest portrait",search:"Pikachu sitting peaceful forest portrait illustration art",url:"",span:{cols:1,rows:2}},
     {type:"card",cardId:null,name:""},{type:"card",cardId:null,name:""},
-    {type:"span",anchorIdx:2},{type:"span",anchorIdx:2},
-    {type:"print",name:"Pikachu Ash together",search:"Pikachu Ash Ketchum together anime illustration art",url:"",span:{cols:4,rows:1}},{type:"span",anchorIdx:8},{type:"span",anchorIdx:8},{type:"span",anchorIdx:8},
   ]},
+
+  // PAGE 8: Sleeping — cozy and warm
+  // [P2x1][S][c][c]   2-wide cozy top left + cards
+  // [c][P2x2][S][c]   card + 2x2 square Snorlax + card
+  // [c][S   ][S][c]   cards + span continues
   { id:8, theme:"sleeping", label:"Sleeping Pokémon", pct:0, slots:[
-    {type:"card",cardId:null,name:""},{type:"card",cardId:null,name:""},{type:"card",cardId:null,name:""},{type:"card",cardId:null,name:""},
-    {type:"card",cardId:null,name:""},{type:"card",cardId:null,name:""},{type:"card",cardId:null,name:""},
-    {type:"print",name:"Snorlax sleeping cozy",search:"Snorlax sleeping cozy forest moonlight illustration",url:"",span:{cols:1,rows:2}},
-    {type:"print",name:"Jigglypuff singing art",search:"Jigglypuff singing microphone audience sleeping art",url:"",span:{cols:3,rows:1}},{type:"span",anchorIdx:8},{type:"span",anchorIdx:8},{type:"span",anchorIdx:7},
+    {type:"print",name:"Jigglypuff singing art",search:"Jigglypuff singing microphone everyone sleeping cozy art",url:"",span:{cols:2,rows:1}},
+    {type:"span",anchorIdx:0},
+    {type:"card",cardId:null,name:""},{type:"card",cardId:null,name:""},
+    {type:"card",cardId:null,name:""},
+    {type:"print",name:"Snorlax sleeping cozy",search:"Snorlax sleeping cozy moonlight forest warm illustration",url:"",span:{cols:2,rows:2}},
+    {type:"span",anchorIdx:5},
+    {type:"card",cardId:null,name:""},
+    {type:"card",cardId:null,name:""},
+    {type:"span",anchorIdx:5},{type:"span",anchorIdx:5},
+    {type:"card",cardId:null,name:""},
   ]},
+
+  // PAGE 9: Water — serene, deep ocean
+  // [c][c][c][P1x3]   cards + 1x3 tall portrait far right
+  // [P3x1][S][S][S]   3-wide panorama middle
+  // [P2x1][S][c][S]   2-wide bottom left + card + span
   { id:9, theme:"water", label:"Water & Ocean", pct:0, slots:[
     {type:"card",cardId:null,name:""},{type:"card",cardId:null,name:""},{type:"card",cardId:null,name:""},
-    {type:"print",name:"Lapras ocean sunset art",search:"Lapras ocean sunset sailing illustration art",url:"",span:{cols:1,rows:3}},
-    {type:"card",cardId:null,name:""},{type:"card",cardId:null,name:""},
-    {type:"print",name:"Vaporeon swimming ocean",search:"Vaporeon ocean waves swimming watercolour art",url:"",span:{cols:2,rows:1}},{type:"span",anchorIdx:6},
-    {type:"print",name:"Magikarp koi underwater",search:"Magikarp koi pond underwater aesthetic illustration art",url:"",span:{cols:4,rows:1}},{type:"span",anchorIdx:8},{type:"span",anchorIdx:8},{type:"span",anchorIdx:8},
+    {type:"print",name:"Lapras ocean portrait",search:"Lapras ocean deep sea portrait illustration art",url:"",span:{cols:1,rows:3}},
+    {type:"print",name:"Ocean Pokemon panorama",search:"Gyarados Vaporeon Suicune ocean waves panorama art",url:"",span:{cols:3,rows:1}},
+    {type:"span",anchorIdx:4},{type:"span",anchorIdx:4},
+    {type:"span",anchorIdx:3},
+    {type:"print",name:"Magikarp koi art",search:"Magikarp koi underwater serene illustration art",url:"",span:{cols:2,rows:1}},
+    {type:"span",anchorIdx:8},
+    {type:"card",cardId:null,name:""},
+    {type:"span",anchorIdx:3},
   ]},
-];
-const DEFAULT_PRINTS = [
+];const DEFAULT_PRINTS = [
   { id:1, theme:"teamrocket",   label:"Team Rocket — Page 1",  slots:[
     {type:"print",name:"Team Rocket Hideout art",   search:"Team Rocket hideout Pokemon anime art"},
     {type:"print",name:"Jessie James Meowth art",   search:"Jessie James Meowth Team Rocket anime art"},
