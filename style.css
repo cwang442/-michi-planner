@@ -136,14 +136,9 @@ body {
 .page-pills {
   display: flex;
   gap: 6px;
-  flex-wrap: nowrap;
-  overflow-x: auto;
-  margin-bottom: 10px;
-  padding-bottom: 4px;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
 }
-.page-pills::-webkit-scrollbar { display: none; }
 .page-pill {
   padding: 5px 12px;
   border-radius: 99px;
@@ -221,17 +216,15 @@ body {
 .binder-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  grid-template-rows: repeat(3, 1fr);
   gap: 7px;
   padding: 10px;
   background: #020617;
   border-radius: 8px;
-  /* Lock to 3x4 = 12 pockets, matching Vault X binder */
-  aspect-ratio: 4 / 3.5;
 }
 
 /* ── Pocket ── */
 .pocket {
+  aspect-ratio: 2.5 / 3.5;
   border-radius: 6px;
   border: 2px solid var(--border);
   background: var(--surface);
@@ -239,8 +232,6 @@ body {
   overflow: hidden;
   position: relative;
   transition: transform 0.12s, box-shadow 0.12s;
-  min-height: 0;
-  min-width: 0;
 }
 .pocket:active { transform: scale(0.96); }
 .pocket.is-card { border-color: rgba(99,102,241,0.5); background: linear-gradient(135deg,#1e3a8a,#3730a3); }
@@ -574,235 +565,3 @@ body {
   .form-grid { grid-template-columns: 1fr; }
   .slot-grid { grid-template-columns: 1fr; }
 }
-
-/* ── OCR Progress ── */
-.ocr-progress {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 20px 16px;
-  margin-bottom: 16px;
-}
-.ocr-bar-wrap {
-  background: var(--border);
-  border-radius: 99px;
-  height: 6px;
-  overflow: hidden;
-  margin-bottom: 10px;
-}
-.ocr-bar {
-  height: 100%;
-  border-radius: 99px;
-  background: linear-gradient(90deg, var(--accent), var(--blue));
-  width: 0%;
-  transition: width 0.3s;
-}
-.ocr-msg {
-  font-size: 12px;
-  color: var(--muted);
-  text-align: center;
-  font-family: monospace;
-}
-
-/* ── Review cards ── */
-.review-header { margin-bottom: 12px; }
-.review-header h3 { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
-.review-sub { font-size: 12px; color: var(--muted); }
-.review-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 14px; }
-.review-card {
-  display: flex;
-  gap: 12px;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 12px;
-  align-items: flex-start;
-}
-.review-img {
-  width: 56px;
-  flex-shrink: 0;
-  border-radius: 5px;
-  object-fit: cover;
-  border: 1px solid var(--border);
-  aspect-ratio: 2.5/3.5;
-  background: var(--raised);
-}
-.review-fields {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  min-width: 0;
-}
-.review-input {
-  width: 100%;
-  background: #020617;
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  color: var(--text);
-  padding: 7px 10px;
-  font-size: 12px;
-  outline: none;
-}
-.review-input:focus { border-color: var(--accent); }
-.review-row { display: flex; gap: 6px; }
-.review-select {
-  flex: 1;
-  background: #020617;
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  color: var(--text);
-  padding: 7px 10px;
-  font-size: 11px;
-  outline: none;
-  -webkit-appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%236B6B8F'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 8px center;
-  padding-right: 24px;
-}
-.price-input { max-width: 90px; }
-.remove-review-card {
-  background: none;
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  color: var(--muted);
-  font-size: 11px;
-  padding: 4px 8px;
-  cursor: pointer;
-  align-self: flex-start;
-}
-.remove-review-card:active { background: var(--raised); }
-.review-actions {
-  display: flex;
-  gap: 8px;
-  flex-direction: column;
-  margin-top: 4px;
-}
-.review-actions .btn-primary,
-.review-actions .btn-ghost { width: 100%; text-align: center; }
-
-/* ── Toast ── */
-.toast {
-  position: fixed;
-  bottom: 24px;
-  left: 50%;
-  transform: translateX(-50%) translateY(80px);
-  background: var(--raised);
-  border: 1px solid var(--border);
-  color: var(--text);
-  padding: 10px 20px;
-  border-radius: 99px;
-  font-size: 13px;
-  font-weight: 600;
-  z-index: 999;
-  opacity: 0;
-  transition: transform 0.25s, opacity 0.25s;
-  white-space: nowrap;
-}
-.toast.show {
-  transform: translateX(-50%) translateY(0);
-  opacity: 1;
-}
-
-/* ── Print find buttons ── */
-.print-find-btns {
-  display: flex;
-  gap: 8px;
-  margin: 10px 0;
-}
-.print-find-btn {
-  flex: 1;
-  display: block;
-  text-align: center;
-  padding: 10px 8px;
-  border-radius: 8px;
-  font-size: 13px;
-  font-weight: 700;
-  text-decoration: none;
-  transition: opacity 0.15s;
-}
-.print-find-btn:active { opacity: 0.7; }
-.pinterest-btn {
-  background: #E60023;
-  color: #fff;
-}
-.google-btn {
-  background: var(--raised);
-  color: var(--text);
-  border: 1px solid var(--border);
-}
-.print-url-section { margin-top: 4px; }
-.print-url-hint {
-  font-size: 10px;
-  color: var(--muted);
-  margin: 3px 0 7px;
-  line-height: 1.4;
-}
-
-/* ── Duplicate card warning ── */
-.review-dupe {
-  border-color: #F59E0B !important;
-}
-.dupe-warning {
-  font-size: 11px;
-  color: #F59E0B;
-  background: rgba(245,158,11,0.12);
-  border: 1px solid rgba(245,158,11,0.3);
-  border-radius: 6px;
-  padding: 5px 8px;
-  margin-bottom: 6px;
-  font-weight: 600;
-}
-
-/* ── Theme manager ── */
-.theme-row {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 8px 0;
-  border-bottom: 1px solid var(--border);
-}
-.theme-choice-btn {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 10px 6px;
-  border: 2px solid var(--border);
-  border-radius: 10px;
-  cursor: pointer;
-  gap: 4px;
-  transition: all 0.12s;
-}
-.theme-choice-btn.active {
-  border-width: 2px;
-}
-
-/* ── Add page pill ── */
-.add-page-pill {
-  border: 2px dashed var(--border) !important;
-  color: var(--muted) !important;
-  background: transparent !important;
-}
-.add-page-pill:hover { border-color: #818CF8 !important; color: #818CF8 !important; }
-
-/* ── Theme suggestions ── */
-.suggestions-header {
-  font-size: 11px;
-  color: var(--muted);
-  margin-bottom: 6px;
-  font-weight: 600;
-}
-.suggestion-chip {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 7px 10px;
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  margin-bottom: 5px;
-  font-size: 12px;
-  font-weight: 600;
-}
-.suggestion-chip span:first-child { flex: 1; }
