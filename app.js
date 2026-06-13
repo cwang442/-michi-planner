@@ -1,13 +1,18 @@
 // Michi Method Planner — app.js
 
-// Fix binder grid CSS conflict injected via JS since style.css upload fails
+// Fix binder grid CSS — injected via JS
 (function() {
   const style = document.createElement("style");
   style.textContent = `
-    .pocket { aspect-ratio: unset !important; min-height: 0; min-width: 0; }
-    .binder-grid { aspect-ratio: unset !important; height: 320px; }
-    @media (min-width: 600px) { .binder-grid { height: 400px; } }
-    @media (min-width: 900px) { .binder-grid { height: 480px; } }
+    .binder-grid {
+      aspect-ratio: unset !important;
+      grid-template-rows: unset !important;
+      grid-auto-rows: 1fr !important;
+      height: 360px !important;
+    }
+    @media (min-width: 768px) { .binder-grid { height: 440px !important; } }
+    @media (min-width: 1024px) { .binder-grid { height: 520px !important; } }
+    .pocket { aspect-ratio: unset !important; }
     .page-pills { flex-wrap: nowrap !important; overflow-x: auto !important; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
     .page-pills::-webkit-scrollbar { display: none; }
   `;
