@@ -602,6 +602,7 @@ function renderPages() {
         <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap">
           <button id="btn-change-theme" style="background:none;border:1px solid var(--border);color:var(--muted);border-radius:6px;padding:5px 12px;font-size:12px;cursor:pointer">🎨 Theme</button>
           <button id="btn-add-page" style="background:none;border:1px solid #818CF855;color:#818CF8;border-radius:6px;padding:5px 12px;font-size:12px;cursor:pointer">＋ Add page</button>
+          <button id="btn-auto-arrange" style="background:none;border:1px solid #34D39955;color:#34D399;border-radius:6px;padding:5px 12px;font-size:12px;cursor:pointer">✨ Auto-arrange</button>
           <button id="btn-delete-page" style="background:none;border:1px solid #F8717133;color:#F87171;border-radius:6px;padding:5px 12px;font-size:12px;cursor:pointer">🗑 Delete</button>
         </div>
       </div>
@@ -625,6 +626,10 @@ function renderPages() {
   try {
     document.getElementById("btn-change-theme").addEventListener("click", () => openPageThemeModal(currentPage));
     document.getElementById("btn-add-page").addEventListener("click", () => openAddPageModal());
+    document.getElementById("btn-auto-arrange").addEventListener("click", () => {
+      if (!state.collection.length) { showToast("Upload some cards first!"); return; }
+      autoSlotCollection();
+    });
     document.getElementById("btn-delete-page").addEventListener("click", () => deletePage(currentPage));
   } catch(e) { console.warn("Button listener error:", e); }
 
