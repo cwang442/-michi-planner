@@ -251,7 +251,7 @@ const DEFAULT_PAGES = [
 ];
 
 // ── Storage ─────────────────────────────────────────────────────────────────
-const LAYOUT_VERSION = "v4-fixed"; // bump this when DEFAULT_PAGES layout changes
+const LAYOUT_VERSION = "v5-clean"; // bump this when DEFAULT_PAGES layout changes
 
 // Load collection independently — never wiped by layout changes
 function loadCollection() {
@@ -622,9 +622,11 @@ function renderPages() {
   `;
 
   // Attach button listeners now that elements exist
-  document.getElementById("btn-change-theme").addEventListener("click", () => openPageThemeModal(currentPage));
-  document.getElementById("btn-add-page").addEventListener("click", () => openAddPageModal());
-  document.getElementById("btn-delete-page").addEventListener("click", () => deletePage(currentPage));
+  try {
+    document.getElementById("btn-change-theme").addEventListener("click", () => openPageThemeModal(currentPage));
+    document.getElementById("btn-add-page").addEventListener("click", () => openAddPageModal());
+    document.getElementById("btn-delete-page").addEventListener("click", () => deletePage(currentPage));
+  } catch(e) { console.warn("Button listener error:", e); }
 
   // Build binder grid
   const grid = document.getElementById("binder-grid");
