@@ -453,11 +453,6 @@ function renderPages() {
   const printCount = pg.slots.filter(s => s.type === "print").length;
   const emptyCount = pg.slots.filter(s => s.type === "empty" || !s.type).length;
 
-  // Change theme button
-  document.getElementById("change-theme-btn").addEventListener("click", () => {
-    openPageThemeModal(currentPage);
-  });
-
   // Auto-arrange button
   let autoBtn = document.getElementById("auto-arrange-btn");
   if (!autoBtn) {
@@ -498,6 +493,11 @@ function renderPages() {
       <div class="slot-grid" id="slot-grid"></div>
     </div>
   `;
+
+  // Change theme button — attach after innerHTML is set
+  document.getElementById("change-theme-btn").addEventListener("click", () => {
+    openPageThemeModal(currentPage);
+  });
 
   // Pockets — with CSS grid span support
   const grid = document.getElementById("binder-grid");
@@ -878,8 +878,10 @@ document.getElementById("modal-cancel").addEventListener("click", () => document
 document.getElementById("modal-save").addEventListener("click", () => {
   if (!editingSlot) return;
   const { pageIdx, slotIdx } = editingSlot;
-  const slot = state.pages[pageIdx].slots[slotIdx];
+  const slots = state.pages[pageIdx].slots;
+  const slot  = slots[slotIdx];
   const activeType = document.querySelector(".type-btn.active")?.dataset.type || "empty";
+  const wasSpanning = slot.type === "print" && slot.span && (slot.span.cols > 1 || slot.span.rows > 1);
 
   if (activeType === "card") {
     const selVal = document.getElementById("modal-card-select").value;
@@ -888,6 +890,7 @@ document.getElementById("modal-save").addEventListener("click", () => {
     slot.cardId  = card ? card.id : null;
     slot.name    = card ? card.name : "";
     slot.url     = undefined;
+    slot.span    = undefined;
   } else if (activeType === "print") {
     slot.type    = "print";
     slot.cardId  = null;
@@ -899,6 +902,16 @@ document.getElementById("modal-save").addEventListener("click", () => {
     slot.cardId  = null;
     slot.name    = "";
     slot.url     = undefined;
+    slot.span    = undefined;
+  }
+
+  // If we just changed away from a spanning print, free all its span slots
+  if (wasSpanning && activeType !== "print") {
+    slots.forEach((s, i) => {
+      if (s.type === "span" && s.anchorIdx === slotIdx) {
+        slots[i] = { type: "empty" };
+      }
+    });
   }
 
   saveState();
