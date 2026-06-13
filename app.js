@@ -223,21 +223,28 @@ const DEFAULT_PAGES = [
 // ── Storage ─────────────────────────────────────────────────────────────────
 const LAYOUT_VERSION = "v3-spans"; // bump this when DEFAULT_PAGES layout changes
 
+// Load collection independently — never wiped by layout changes
+function loadCollection() {
+  try {
+    return JSON.parse(localStorage.getItem("michi_collection")) || [];
+  } catch(e) {
+    return [];
+  }
+}
+
+// Load pages — resets to DEFAULT_PAGES if layout version changed, but ALWAYS preserves collection
 function loadState() {
+  const collection = loadCollection();
   try {
     const savedVersion = localStorage.getItem("michi_layout_version");
     const savedPages   = JSON.parse(localStorage.getItem("michi_pages"));
-    const collection   = JSON.parse(localStorage.getItem("michi_collection")) || [];
-
-    // If layout version changed or no saved pages, use fresh DEFAULT_PAGES
-    // but keep the collection
     if (savedVersion !== LAYOUT_VERSION || !savedPages) {
       return { pages: DEFAULT_PAGES, collection };
     }
-
     return { pages: savedPages, collection };
   } catch(e) {
-    return { pages: DEFAULT_PAGES, collection: [] };
+    // Pages failed to parse — reset pages but KEEP collection
+    return { pages: DEFAULT_PAGES, collection };
   }
 }
 
