@@ -28,103 +28,69 @@ const RARITY_COLORS = {
 const DEFAULT_PAGES = [
   { id:1, theme:"teamrocket", label:"Team Rocket — Page 1", pct:0, slots:[
     {type:"card",cardId:null,name:""},{type:"card",cardId:null,name:""},
+    {type:"print",name:"Team Rocket hideout art",search:"Team Rocket hideout dark Pokemon anime aesthetic art",url:"",span:{cols:2,rows:2}},{type:"span",anchorIdx:2},
     {type:"card",cardId:null,name:""},{type:"card",cardId:null,name:""},
+    {type:"span",anchorIdx:2},{type:"span",anchorIdx:2},
     {type:"card",cardId:null,name:""},{type:"card",cardId:null,name:""},
-    {type:"card",cardId:null,name:""},{type:"card",cardId:null,name:""},
-    {type:"print",name:"Team Rocket hideout art",search:"Team Rocket hideout Pokemon anime art",url:""},
-    {type:"print",name:"Jessie James Meowth art",search:"Jessie James Meowth Team Rocket anime art",url:""},
-    {type:"card",cardId:null,name:""},{type:"card",cardId:null,name:""},
+    {type:"print",name:"Jessie James Meowth art",search:"Jessie James Meowth blasting off anime art",url:"",span:{cols:2,rows:1}},{type:"span",anchorIdx:10},
   ]},
   { id:2, theme:"teamrocket", label:"Team Rocket — Page 2", pct:0, slots:[
-    {type:"card",cardId:null,name:""},{type:"card",cardId:null,name:""},
-    {type:"card",cardId:null,name:""},{type:"card",cardId:null,name:""},
-    {type:"card",cardId:null,name:""},{type:"card",cardId:null,name:""},
-    {type:"print",name:"Team Rocket blasting off",search:"Team Rocket blasting off sky anime art",url:""},
-    {type:"print",name:"N trainer art",search:"N trainer Pokemon Black White art",url:""},
-    {type:"print",name:"Team Rocket R logo",search:"Team Rocket R logo dark aesthetic art",url:""},
-    {type:"card",cardId:null,name:""},{type:"card",cardId:null,name:""},
+    {type:"card",cardId:null,name:""},{type:"card",cardId:null,name:""},{type:"card",cardId:null,name:""},
+    {type:"print",name:"Team Rocket R logo art",search:"Team Rocket R logo dark dramatic art",url:"",span:{cols:1,rows:3}},
     {type:"card",cardId:null,name:""},
+    {type:"print",name:"Team Rocket blasting off",search:"Team Rocket blasting off sky anime art",url:"",span:{cols:3,rows:1}},{type:"span",anchorIdx:5},{type:"span",anchorIdx:5},
+    {type:"print",name:"N trainer art",search:"N trainer Pokemon Black White aesthetic art",url:"",span:{cols:4,rows:1}},{type:"span",anchorIdx:8},{type:"span",anchorIdx:8},{type:"span",anchorIdx:8},
   ]},
   { id:3, theme:"eeveelutions", label:"Eeveelutions", pct:0, slots:[
-    {type:"card",cardId:null,name:""},{type:"card",cardId:null,name:""},
-    {type:"card",cardId:null,name:""},
-    {type:"print",name:"Vaporeon art",search:"Vaporeon watercolour aesthetic art",url:""},
-    {type:"print",name:"Flareon art",search:"Flareon cozy fire illustration art",url:""},
-    {type:"print",name:"Espeon art",search:"Espeon moonlight psychic art",url:""},
-    {type:"print",name:"Umbreon art",search:"Umbreon night stars illustration art",url:""},
-    {type:"print",name:"Sylveon art",search:"Sylveon fairy ribbon illustration art",url:""},
-    {type:"print",name:"Glaceon art",search:"Glaceon ice snow illustration art",url:""},
-    {type:"print",name:"All Eeveelutions",search:"all eeveelutions group illustration art",url:""},
-    {type:"print",name:"Espeon + Umbreon",search:"Espeon Umbreon together illustration art",url:""},
-    {type:"print",name:"Eevee cozy art",search:"Eevee cozy forest illustration art",url:""},
+    {type:"card",cardId:null,name:""},{type:"card",cardId:null,name:""},{type:"card",cardId:null,name:""},
+    {type:"print",name:"Eevee cozy forest art",search:"Eevee sitting cozy forest illustration aesthetic",url:"",span:{cols:1,rows:3}},
+    {type:"print",name:"All Eeveelutions group",search:"all eeveelutions together rainbow illustration art",url:"",span:{cols:2,rows:1}},{type:"span",anchorIdx:4},
+    {type:"print",name:"Espeon Umbreon moonlight",search:"Espeon Umbreon night moonlight together art",url:"",span:{cols:2,rows:1}},{type:"span",anchorIdx:3},
+    {type:"print",name:"Vaporeon ocean waves",search:"Vaporeon ocean swimming watercolour illustration",url:"",span:{cols:2,rows:1}},{type:"span",anchorIdx:8},
+    {type:"print",name:"Sylveon ribbon fairy",search:"Sylveon fairy ribbon pastel illustration art",url:"",span:{cols:2,rows:1}},{type:"span",anchorIdx:3},
   ]},
   { id:4, theme:"pink", label:"Pink Page", pct:0, slots:[
+    {type:"card",cardId:null,name:""},{type:"card",cardId:null,name:""},{type:"card",cardId:null,name:""},{type:"card",cardId:null,name:""},
+    {type:"card",cardId:null,name:""},{type:"card",cardId:null,name:""},{type:"card",cardId:null,name:""},{type:"card",cardId:null,name:""},
     {type:"card",cardId:null,name:""},{type:"card",cardId:null,name:""},
-    {type:"card",cardId:null,name:""},{type:"card",cardId:null,name:""},
-    {type:"card",cardId:null,name:""},{type:"card",cardId:null,name:""},
-    {type:"card",cardId:null,name:""},{type:"card",cardId:null,name:""},
-    {type:"card",cardId:null,name:""},{type:"card",cardId:null,name:""},
-    {type:"card",cardId:null,name:""},
-    {type:"print",name:"Clefairy moon art",search:"Clefairy moon night pink pastel illustration",url:""},
+    {type:"print",name:"Clefairy moon pink art",search:"Clefairy moon night pink pastel stars illustration",url:"",span:{cols:2,rows:1}},{type:"span",anchorIdx:10},
   ]},
   { id:5, theme:"green", label:"Green & Nature", pct:0, slots:[
     {type:"card",cardId:null,name:""},{type:"card",cardId:null,name:""},
+    {type:"print",name:"Venusaur forest art",search:"Venusaur lush forest botanical illustration art",url:"",span:{cols:2,rows:2}},{type:"span",anchorIdx:2},
     {type:"card",cardId:null,name:""},{type:"card",cardId:null,name:""},
-    {type:"card",cardId:null,name:""},{type:"card",cardId:null,name:""},
-    {type:"card",cardId:null,name:""},{type:"card",cardId:null,name:""},
-    {type:"card",cardId:null,name:""},{type:"card",cardId:null,name:""},
-    {type:"print",name:"Venusaur forest art",search:"Venusaur lush forest botanical illustration",url:""},
-    {type:"print",name:"Chikorita meadow art",search:"Chikorita meadow Gen 2 illustration art",url:""},
+    {type:"span",anchorIdx:2},{type:"span",anchorIdx:2},
+    {type:"print",name:"Chikorita meadow art",search:"Chikorita meadow flowers Gen 2 illustration art",url:"",span:{cols:4,rows:1}},{type:"span",anchorIdx:8},{type:"span",anchorIdx:8},{type:"span",anchorIdx:8},
   ]},
   { id:6, theme:"psyduck", label:"Psyduck", pct:0, slots:[
     {type:"card",cardId:null,name:""},
-    {type:"print",name:"Psyduck rain art",search:"Psyduck rain puddle sad aesthetic art",url:""},
-    {type:"print",name:"Psyduck headache art",search:"Psyduck headache confused illustration",url:""},
-    {type:"print",name:"Psyduck bathtub art",search:"Psyduck bathtub rubber duck cute art",url:""},
-    {type:"print",name:"Golduck art",search:"Golduck cool blue illustration art",url:""},
-    {type:"print",name:"Psyduck river art",search:"Psyduck floating river water illustration",url:""},
-    {type:"print",name:"Psyduck cloudy art",search:"Psyduck cloudy overcast day illustration",url:""},
-    {type:"print",name:"Psyduck sleeping art",search:"Psyduck sleeping napping cute art",url:""},
-    {type:"print",name:"Psyduck + Misty art",search:"Psyduck Misty Pokemon anime illustration",url:""},
-    {type:"print",name:"Psyduck chibi art",search:"Psyduck kawaii chibi cute art",url:""},
-    {type:"print",name:"Psyduck window art",search:"Psyduck rainy window cozy illustration",url:""},
-    {type:"print",name:"Psyduck retro art",search:"Psyduck vintage retro 90s illustration",url:""},
+    {type:"print",name:"Psyduck rainy day art",search:"Psyduck rain puddle sad aesthetic illustration",url:"",span:{cols:3,rows:1}},{type:"span",anchorIdx:1},{type:"span",anchorIdx:1},
+    {type:"print",name:"Psyduck headache art",search:"Psyduck headache confused cute art",url:"",span:{cols:2,rows:1}},{type:"span",anchorIdx:4},
+    {type:"print",name:"Misty and Psyduck art",search:"Misty Psyduck Pokemon anime together illustration",url:"",span:{cols:2,rows:1}},{type:"span",anchorIdx:6},
+    {type:"print",name:"Psyduck bathtub art",search:"Psyduck bathtub rubber duck cute cozy art",url:"",span:{cols:2,rows:1}},{type:"span",anchorIdx:8},
+    {type:"print",name:"Psyduck vintage retro art",search:"Psyduck vintage retro 90s anime style illustration",url:"",span:{cols:2,rows:1}},{type:"span",anchorIdx:10},
   ]},
   { id:7, theme:"pikachu", label:"Pikachu", pct:0, slots:[
     {type:"card",cardId:null,name:""},{type:"card",cardId:null,name:""},
+    {type:"print",name:"Pikachu forest sitting",search:"Pikachu sitting forest peaceful illustration art",url:"",span:{cols:2,rows:2}},{type:"span",anchorIdx:2},
     {type:"card",cardId:null,name:""},{type:"card",cardId:null,name:""},
-    {type:"print",name:"Pikachu forest art",search:"Pikachu sitting forest illustration art",url:""},
-    {type:"print",name:"Pikachu sleeping art",search:"Pikachu sleeping peaceful cute illustration",url:""},
-    {type:"print",name:"Pikachu rain art",search:"Pikachu rain umbrella cozy illustration",url:""},
-    {type:"print",name:"Pikachu + Ash art",search:"Pikachu Ash together Pokemon anime art",url:""},
-    {type:"print",name:"Pichu baby art",search:"Pichu baby cute illustration art",url:""},
-    {type:"print",name:"Pikachu ketchup art",search:"Pikachu ketchup bottle sleeping cute art",url:""},
-    {type:"print",name:"Pikachu vintage art",search:"Pikachu vintage Gen 1 1996 illustration",url:""},
-    {type:"print",name:"Raichu evolution art",search:"Raichu Pikachu Pichu evolution chart art",url:""},
+    {type:"span",anchorIdx:2},{type:"span",anchorIdx:2},
+    {type:"print",name:"Pikachu Ash together",search:"Pikachu Ash Ketchum together anime illustration art",url:"",span:{cols:4,rows:1}},{type:"span",anchorIdx:8},{type:"span",anchorIdx:8},{type:"span",anchorIdx:8},
   ]},
   { id:8, theme:"sleeping", label:"Sleeping Pokémon", pct:0, slots:[
-    {type:"card",cardId:null,name:""},{type:"card",cardId:null,name:""},
-    {type:"card",cardId:null,name:""},{type:"card",cardId:null,name:""},
-    {type:"card",cardId:null,name:""},{type:"card",cardId:null,name:""},
-    {type:"card",cardId:null,name:""},
-    {type:"print",name:"Snorlax cozy art",search:"Snorlax sleeping cozy forest illustration",url:""},
-    {type:"print",name:"Jigglypuff art",search:"Jigglypuff singing everyone sleeping art",url:""},
-    {type:"print",name:"Cleffa stars art",search:"Cleffa sleeping stars night illustration",url:""},
-    {type:"print",name:"Eevee sleeping art",search:"Eevee sleeping cozy blanket illustration",url:""},
-    {type:"print",name:"Drowzee dream art",search:"Drowzee Hypno dreaming psychic illustration",url:""},
+    {type:"card",cardId:null,name:""},{type:"card",cardId:null,name:""},{type:"card",cardId:null,name:""},{type:"card",cardId:null,name:""},
+    {type:"card",cardId:null,name:""},{type:"card",cardId:null,name:""},{type:"card",cardId:null,name:""},
+    {type:"print",name:"Snorlax sleeping cozy",search:"Snorlax sleeping cozy forest moonlight illustration",url:"",span:{cols:1,rows:2}},
+    {type:"print",name:"Jigglypuff singing art",search:"Jigglypuff singing microphone audience sleeping art",url:"",span:{cols:3,rows:1}},{type:"span",anchorIdx:8},{type:"span",anchorIdx:8},{type:"span",anchorIdx:7},
   ]},
   { id:9, theme:"water", label:"Water & Ocean", pct:0, slots:[
+    {type:"card",cardId:null,name:""},{type:"card",cardId:null,name:""},{type:"card",cardId:null,name:""},
+    {type:"print",name:"Lapras ocean sunset art",search:"Lapras ocean sunset sailing illustration art",url:"",span:{cols:1,rows:3}},
     {type:"card",cardId:null,name:""},{type:"card",cardId:null,name:""},
-    {type:"card",cardId:null,name:""},{type:"card",cardId:null,name:""},
-    {type:"card",cardId:null,name:""},{type:"card",cardId:null,name:""},
-    {type:"card",cardId:null,name:""},{type:"card",cardId:null,name:""},
-    {type:"card",cardId:null,name:""},
-    {type:"print",name:"Magikarp koi art",search:"Magikarp koi ocean illustration art",url:""},
-    {type:"print",name:"Vaporeon ocean art",search:"Vaporeon ocean waves swimming illustration",url:""},
-    {type:"print",name:"Lapras sunset art",search:"Lapras ocean sunset sailing illustration",url:""},
+    {type:"print",name:"Vaporeon swimming ocean",search:"Vaporeon ocean waves swimming watercolour art",url:"",span:{cols:2,rows:1}},{type:"span",anchorIdx:6},
+    {type:"print",name:"Magikarp koi underwater",search:"Magikarp koi pond underwater aesthetic illustration art",url:"",span:{cols:4,rows:1}},{type:"span",anchorIdx:8},{type:"span",anchorIdx:8},{type:"span",anchorIdx:8},
   ]},
 ];
-
 const DEFAULT_PRINTS = [
   { id:1, theme:"teamrocket",   label:"Team Rocket — Page 1",  slots:[
     {type:"print",name:"Team Rocket Hideout art",   search:"Team Rocket hideout Pokemon anime art"},
@@ -255,6 +221,7 @@ function autoSlotCollection() {
   state.pages.forEach((pg, pageIdx) => {
     if (!themeSlots[pg.theme]) themeSlots[pg.theme] = [];
     pg.slots.forEach((slot, slotIdx) => {
+      // Only use actual card slots — skip print anchors and span cells
       if (slot.type === "card" || slot.type === "empty") {
         themeSlots[pg.theme].push({ pageIdx, slotIdx });
       }
@@ -352,17 +319,36 @@ function renderPages() {
     </div>
   `;
 
-  // Pockets
+  // Pockets — with CSS grid span support
   const grid = document.getElementById("binder-grid");
   pg.slots.forEach((slot, i) => {
+    // Span slots are hidden — the anchor slot stretches to cover them
+    if (slot.type === "span") {
+      const hidden = document.createElement("div");
+      hidden.style.display = "none";
+      grid.appendChild(hidden);
+      return;
+    }
+
     const div = document.createElement("div");
-    const img = slotImage(slot);
+    const anchor = getAnchorSlot(pg.slots, slot);
+    const img = slotImage(anchor);
+
     div.className = "pocket" + (slot.type==="card"?" is-card":slot.type==="print"?" is-print":"");
+
+    // Apply CSS grid span for multi-pocket prints
+    if (slot.type === "print" && slot.span) {
+      if (slot.span.cols > 1) div.style.gridColumn = `span ${slot.span.cols}`;
+      if (slot.span.rows > 1) div.style.gridRow    = `span ${slot.span.rows}`;
+      div.style.aspectRatio = "unset"; // let the grid control dimensions
+    }
+
     div.addEventListener("click", () => openSlotModal(currentPage, i));
 
     if (img) {
       const el = document.createElement("img");
       el.src = img; el.alt = slotLabel(slot);
+      el.style.cssText = "width:100%;height:100%;object-fit:cover;display:block;border-radius:4px";
       el.onerror = () => { el.remove(); div.insertAdjacentHTML("beforeend", pocketInner(slot, i)); };
       div.appendChild(el);
     } else {
@@ -400,6 +386,11 @@ function pocketInner(slot, i) {
   const icon = slot.type==="print"?"🖨️":slot.type==="card"?"🃏":"＋";
   const name = (slotLabel(slot)||"slot "+(i+1)).split(" ").slice(0,4).join(" ");
   return `<div class="pocket-inner"><div class="pocket-icon">${icon}</div><div class="pocket-name">${name}</div></div>`;
+}
+
+function getAnchorSlot(slots, slot) {
+  if (slot.type === "span") return slots[slot.anchorIdx];
+  return slot;
 }
 
 // ── Collection tab ───────────────────────────────────────────────────────────
@@ -579,8 +570,13 @@ function openCardEditModal(cardId) {
 let editingSlot = null;
 
 function openSlotModal(pageIdx, slotIdx) {
+  const slot = state.pages[pageIdx].slots[slotIdx];
+  // If tapped a span cell, redirect to its anchor
+  if (slot.type === "span") {
+    openSlotModal(pageIdx, slot.anchorIdx);
+    return;
+  }
   editingSlot = { pageIdx, slotIdx };
-  const slot  = state.pages[pageIdx].slots[slotIdx];
   const modal = document.getElementById("modal");
 
   document.getElementById("modal-title").textContent = `Edit Slot ${slotIdx+1} — Page ${state.pages[pageIdx].id}`;
