@@ -565,16 +565,22 @@ function deletePage(pageIdx) {
 function renderPages() {
   const pills = document.getElementById("page-pills");
   pills.innerHTML = "";
+
+  // Page pills
   state.pages.forEach((pg, i) => {
     const btn = document.createElement("button");
     btn.className = "page-pill" + (i === currentPage ? " active" : "");
     btn.textContent = te(pg.theme) + " Pg " + pg.id;
     if (i === currentPage) {
-      btn.style.cssText = `border-color:${tc(pg.theme)};color:${tc(pg.theme)};background:${tc(pg.theme)}22`;
+      const c = tc(pg.theme);
+      btn.style.cssText = `border-color:${c};color:${c};background:${c}22`;
     }
     btn.addEventListener("click", () => { currentPage = i; renderPages(); });
     pills.appendChild(btn);
   });
+
+  // Suggestions
+  renderSuggestions();
 
   const pg = state.pages[currentPage];
   const pct = calcPct(pg);
@@ -583,25 +589,9 @@ function renderPages() {
   const printCount = pg.slots.filter(s => s.type === "print").length;
   const emptyCount = pg.slots.filter(s => s.type === "empty" || !s.type).length;
 
-  // Auto-arrange button
-  let autoBtn = document.getElementById("auto-arrange-btn");
-  if (!autoBtn) {
-    autoBtn = document.createElement("button");
-    autoBtn.id = "auto-arrange-btn";
-    autoBtn.className = "btn-ghost";
-    autoBtn.style.cssText = "font-size:11px;padding:5px 12px;margin-bottom:10px;width:100%";
-    autoBtn.textContent = "✨ Auto-arrange cards by theme";
-    autoBtn.addEventListener("click", () => {
-      if (state.collection.length === 0) { showToast("Upload some cards first!"); return; }
-      autoSlotCollection();
-    });
-    document.getElementById("page-pills").after(autoBtn);
-  }
-
-  // Theme suggestions
-  renderSuggestions();
-
-  document.getElementById("page-view").innerHTML = `
+  // Build page view HTML
+  const pageView = document.getElementById("page-view");
+  pageView.innerHTML = `
     <div class="page-header">
       <div style="flex:1">
         <span class="page-theme-badge" style="background:${color}22;border:1px solid ${color}44;color:${color}">
@@ -610,9 +600,9 @@ function renderPages() {
         <div class="progress-bar"><div class="progress-fill" style="width:${pct}%;background:${color}"></div></div>
         <p class="progress-label">${pct}% complete</p>
         <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap">
-          <button id="change-theme-btn" style="background:none;border:1px solid var(--border);color:var(--muted);border-radius:6px;padding:5px 12px;font-size:12px;cursor:pointer">🎨 Theme</button>
-          <button id="add-page-btn" style="background:none;border:1px solid #818CF855;color:#818CF8;border-radius:6px;padding:5px 12px;font-size:12px;cursor:pointer">＋ Add page</button>
-          <button id="delete-page-btn" style="background:none;border:1px solid #F8717133;color:#F87171;border-radius:6px;padding:5px 12px;font-size:12px;cursor:pointer">🗑 Delete</button>
+          <button id="btn-change-theme" style="background:none;border:1px solid var(--border);color:var(--muted);border-radius:6px;padding:5px 12px;font-size:12px;cursor:pointer">🎨 Theme</button>
+          <button id="btn-add-page" style="background:none;border:1px solid #818CF855;color:#818CF8;border-radius:6px;padding:5px 12px;font-size:12px;cursor:pointer">＋ Add page</button>
+          <button id="btn-delete-page" style="background:none;border:1px solid #F8717133;color:#F87171;border-radius:6px;padding:5px 12px;font-size:12px;cursor:pointer">🗑 Delete</button>
         </div>
       </div>
       <div class="page-stats">
@@ -631,35 +621,25 @@ function renderPages() {
     </div>
   `;
 
-  // Buttons — attach after innerHTML is set
-  document.getElementById("change-theme-btn").addEventListener("click", () => {
-    openPageThemeModal(currentPage);
-  });
-  document.getElementById("add-page-btn").addEventListener("click", () => {
-    openAddPageModal();
-  });
-  document.getElementById("delete-page-btn").addEventListener("click", () => {
-    deletePage(currentPage);
-  });
+  // Attach button listeners now that elements exist
+  document.getElementById("btn-change-theme").addEventListener("click", () => openPageThemeModal(currentPage));
+  document.getElementById("btn-add-page").addEventListener("click", () => openAddPageModal());
+  document.getElementById("btn-delete-page").addEventListener("click", () => deletePage(currentPage));
 
-  // Pockets — with CSS grid span support
+  // Build binder grid
   const grid = document.getElementById("binder-grid");
   pg.slots.forEach((slot, i) => {
-    // Span slots are NOT added to the grid at all.
-    // The anchor's CSS gridColumn/gridRow span covers those positions.
     if (slot.type === "span") return;
 
     const div = document.createElement("div");
-    const anchor = getAnchorSlot(pg.slots, slot);
+    const anchor = slot.type === "span" ? pg.slots[slot.anchorIdx] : slot;
     const img = slotImage(anchor);
 
     div.className = "pocket" + (slot.type==="card"?" is-card":slot.type==="print"?" is-print":"");
 
-    // Apply CSS grid span for multi-pocket prints
     if (slot.type === "print" && slot.span) {
       if (slot.span.cols > 1) div.style.gridColumn = `span ${slot.span.cols}`;
       if (slot.span.rows > 1) div.style.gridRow    = `span ${slot.span.rows}`;
-      // Remove aspect-ratio so grid-template-rows controls the height
       div.style.aspectRatio = "unset";
       div.style.height = "100%";
     }
@@ -682,12 +662,14 @@ function renderPages() {
       badge.textContent = slot.url ? "✓" : "PRINT";
       div.appendChild(badge);
     }
+
     grid.appendChild(div);
   });
 
-  // Slot list
+  // Build slot list
   const slotGrid = document.getElementById("slot-grid");
   pg.slots.forEach((slot, i) => {
+    if (slot.type === "span") return;
     const div = document.createElement("div");
     div.className = "slot-item";
     const label = slotLabel(slot);
@@ -703,16 +685,6 @@ function renderPages() {
   document.getElementById("collection-count").textContent = state.collection.length + " cards";
 }
 
-function pocketInner(slot, i) {
-  const icon = slot.type==="print"?"🖨️":slot.type==="card"?"🃏":"＋";
-  const name = (slotLabel(slot)||"slot "+(i+1)).split(" ").slice(0,4).join(" ");
-  return `<div class="pocket-inner"><div class="pocket-icon">${icon}</div><div class="pocket-name">${name}</div></div>`;
-}
-
-function getAnchorSlot(slots, slot) {
-  if (slot.type === "span") return slots[slot.anchorIdx];
-  return slot;
-}
 
 // ── Collection tab ───────────────────────────────────────────────────────────
 function renderCollection() {
