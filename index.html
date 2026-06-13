@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Michi Method Planner</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="app">
+
+    <!-- Header -->
+    <header class="header">
+      <div class="header-inner">
+        <div>
+          <h1 class="logo">✨ Michi Method Planner</h1>
+          <p class="tagline">Vault X 12-pocket · Pink Dragon Shield</p>
+        </div>
+        <div id="collection-count" class="count-badge"></div>
+      </div>
+    </header>
+
+    <!-- Tabs -->
+    <nav class="tabs">
+      <button class="tab active" data-tab="pages">📄 Pages</button>
+      <button class="tab" data-tab="collection">🃏 Collection</button>
+      <button class="tab" data-tab="upload">📸 Upload</button>
+      <button class="tab" data-tab="prints">🖨️ Prints</button>
+    </nav>
+
+    <!-- Tab: Pages -->
+    <section id="tab-pages" class="tab-content active">
+      <div class="page-pills" id="page-pills"></div>
+      <div id="theme-suggestions" style="display:none;margin:6px 0 10px"></div>
+      <div id="page-view"></div>
+    </section>
+
+    <!-- Tab: Collection -->
+    <section id="tab-collection" class="tab-content">
+      <div class="section-header">
+        <span id="coll-total"></span>
+        <button class="btn-ghost" id="clear-collection">Clear all</button>
+      </div>
+      <div id="collection-list"></div>
+    </section>
+
+    <!-- Tab: Upload -->
+    <section id="tab-upload" class="tab-content">
+      <div class="upload-zone" id="upload-zone">
+        <div class="upload-icon">📸</div>
+        <p class="upload-title">Tap to upload card images</p>
+        <p class="upload-sub">Add photos of your cards — one at a time or in batches</p>
+        <input type="file" id="file-input" accept="image/*" multiple hidden />
+        <button class="btn-primary" id="upload-btn">Choose images</button>
+      </div>
+      <div id="upload-preview" class="upload-preview"></div>
+      <div id="card-form" class="card-form hidden">
+        <h3>Add card details</h3>
+        <div class="form-grid">
+          <div class="form-field">
+            <label>Card name</label>
+            <input type="text" id="card-name" placeholder="e.g. Psyduck" />
+          </div>
+          <div class="form-field">
+            <label>Set</label>
+            <input type="text" id="card-set" placeholder="e.g. MEGA Dream ex" />
+          </div>
+          <div class="form-field">
+            <label>Rarity</label>
+            <select id="card-rarity">
+              <option value="SIR">Special Illustration Rare</option>
+              <option value="IR" selected>Illustration Rare</option>
+              <option value="AR">Art Rare</option>
+              <option value="UR">Ultra Rare</option>
+              <option value="Promo">Promo</option>
+              <option value="Hyper Rare">Hyper Rare</option>
+              <option value="Rare">Rare</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label>Price (CAD)</label>
+            <input type="number" id="card-price" placeholder="0.00" step="0.01" />
+          </div>
+          <div class="form-field">
+            <label>Theme</label>
+            <select id="card-theme">
+              <option value="">-- Unassigned --</option>
+              <option value="teamrocket">🚀 Team Rocket</option>
+              <option value="eeveelutions">🌈 Eeveelutions</option>
+              <option value="pink">🩷 Pink Page</option>
+              <option value="green">🌿 Green & Nature</option>
+              <option value="psyduck">🦆 Psyduck</option>
+              <option value="pikachu">⚡ Pikachu</option>
+              <option value="sleeping">💤 Sleeping</option>
+              <option value="water">🌊 Water & Ocean</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-actions">
+          <button class="btn-primary" id="save-card">Save card</button>
+          <button class="btn-ghost" id="cancel-card">Cancel</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tab: Prints -->
+    <section id="tab-prints" class="tab-content">
+      <div class="prints-header">
+        <div>
+          <h2>Walmart Print Catalog</h2>
+          <p id="prints-count"></p>
+        </div>
+        <button class="btn-ghost" id="copy-prints">📋 Copy list</button>
+      </div>
+      <div id="prints-list"></div>
+      <div class="walmart-tip">
+        <strong>At Walmart kiosk:</strong> Photos → 4×6 → Glossy → Standard photo paper.
+        Size prints to <strong>7×9.5 cm</strong> in Canva first. Trim after pickup.
+      </div>
+    </section>
+
+  </div>
+
+  <!-- Edit Modal -->
+  <div id="modal" class="modal hidden">
+    <div class="modal-backdrop" id="modal-backdrop"></div>
+    <div class="modal-box">
+      <h3 id="modal-title">Edit Slot</h3>
+      <div class="modal-type-row">
+        <button class="type-btn active" data-type="card">🃏 Card</button>
+        <button class="type-btn" data-type="print">🖨️ Print</button>
+        <button class="type-btn" data-type="empty">Empty</button>
+      </div>
+      <div id="modal-card-fields">
+        <label>Select a card from your collection</label>
+        <select id="modal-card-select">
+          <option value="">-- Choose card --</option>
+        </select>
+      </div>
+      <div id="modal-print-fields" class="hidden">
+        <label>Print description</label>
+        <input type="text" id="modal-print-name" placeholder="e.g. Psyduck rainy day art" />
+        <label style="margin-top:12px">Search term for Pinterest</label>
+        <input type="text" id="modal-print-search" placeholder="e.g. Psyduck rain aesthetic art" />
+        <div class="modal-print-actions">
+          <a id="pinterest-link" href="#" target="_blank" class="pinterest-btn">📌 Open Pinterest</a>
+        </div>
+        <label style="margin-top:12px">Image URL <span class="optional">(paste after finding art)</span></label>
+        <input type="url" id="modal-print-url" placeholder="https://..." />
+        <img id="modal-print-preview" src="" alt="" class="print-preview hidden" />
+      </div>
+      <div class="modal-actions">
+        <button class="btn-primary" id="modal-save">Save</button>
+        <button class="btn-ghost" id="modal-cancel">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Page Modal -->
+  <div id="add-page-modal" class="modal hidden">
+    <div class="modal-backdrop" id="add-page-backdrop"></div>
+    <div class="modal-box">
+      <h3>Add a New Page</h3>
+      <p style="font-size:12px;color:var(--muted);margin-bottom:12px">Choose a theme</p>
+      <div id="add-page-theme-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:8px"></div>
+    </div>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>
