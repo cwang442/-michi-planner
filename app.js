@@ -1,18 +1,32 @@
 // Michi Method Planner — app.js
 
-// Fix binder grid CSS — injected via JS
+// Restore original working grid CSS
 (function() {
   const style = document.createElement("style");
   style.textContent = `
     .binder-grid {
-      aspect-ratio: unset !important;
+      display: grid !important;
+      grid-template-columns: repeat(4, 1fr) !important;
       grid-template-rows: unset !important;
-      grid-auto-rows: 1fr !important;
-      height: 360px !important;
+      aspect-ratio: unset !important;
+      gap: 7px !important;
+      padding: 10px !important;
+      background: #020617 !important;
+      border-radius: 8px !important;
     }
-    @media (min-width: 768px) { .binder-grid { height: 440px !important; } }
-    @media (min-width: 1024px) { .binder-grid { height: 520px !important; } }
-    .pocket { aspect-ratio: unset !important; }
+    .pocket {
+      aspect-ratio: 2.5 / 3.5 !important;
+      border-radius: 6px !important;
+      border: 2px solid var(--border) !important;
+      background: var(--surface) !important;
+      cursor: pointer !important;
+      overflow: hidden !important;
+      position: relative !important;
+    }
+    .pocket.is-print[style*="gridColumn"], .pocket.is-print[style*="gridRow"] {
+      aspect-ratio: unset !important;
+      height: 100% !important;
+    }
     .page-pills { flex-wrap: nowrap !important; overflow-x: auto !important; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
     .page-pills::-webkit-scrollbar { display: none; }
   `;
