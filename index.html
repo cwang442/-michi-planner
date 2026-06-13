@@ -109,7 +109,7 @@
       <div id="modal-card-fields">
         <label>Select a card from your collection</label>
         <select id="modal-card-select">
-          <option value="">-- Choose card --</option>
+          <option value="">-- Choose from your collection --</option>
         </select>
       </div>
       <div id="modal-print-fields" class="hidden">
@@ -131,6 +131,64 @@
     </div>
   </div>
 
+
+  <!-- Card Edit Modal -->
+  <div id="card-edit-modal" class="modal hidden">
+    <div class="modal-backdrop" id="ce-backdrop"></div>
+    <div class="modal-box">
+      <h3>Edit Card</h3>
+      <img id="ce-img-preview" src="" alt="" class="print-preview hidden" style="max-height:80px;margin-bottom:12px;border-radius:6px;object-fit:cover;width:100%" />
+      <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:14px">
+        <div class="form-field">
+          <label>Card name</label>
+          <input type="text" id="ce-name" />
+        </div>
+        <div class="form-field">
+          <label>Set</label>
+          <input type="text" id="ce-set" />
+        </div>
+        <div class="form-field">
+          <label>Rarity</label>
+          <select id="ce-rarity">
+            <option>Special Illustration Rare</option>
+            <option>Illustration Rare</option>
+            <option>Art Rare</option>
+            <option>Ultra Rare</option>
+            <option>Double Rare</option>
+            <option>Hyper Rare</option>
+            <option>Super Rare</option>
+            <option>ACE SPEC Rare</option>
+            <option>Promo</option>
+            <option>Rare</option>
+            <option>Common</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label>Price (CAD)</label>
+          <input type="number" id="ce-price" step="0.01" />
+        </div>
+        <div class="form-field">
+          <label>Theme</label>
+          <select id="ce-theme">
+            <option value="">-- Unassigned --</option>
+            <option value="teamrocket">🚀 Team Rocket</option>
+            <option value="eeveelutions">🌈 Eeveelutions</option>
+            <option value="pink">🩷 Pink Page</option>
+            <option value="green">🌿 Green & Nature</option>
+            <option value="psyduck">🦆 Psyduck</option>
+            <option value="pikachu">⚡ Pikachu</option>
+            <option value="sleeping">💤 Sleeping</option>
+            <option value="water">🌊 Water & Ocean</option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-actions" style="flex-direction:row">
+        <button class="btn-primary" id="ce-save">Save</button>
+        <button class="btn-ghost" id="ce-cancel">Cancel</button>
+        <button id="ce-delete" style="margin-left:auto;background:none;border:1px solid #F8717144;color:#F87171;border-radius:8px;padding:8px 14px;font-size:12px;cursor:pointer">Delete</button>
+      </div>
+    </div>
+  </div>
   <script src="app.js"></script>
   <script src="upload.js"></script>
 </body>
