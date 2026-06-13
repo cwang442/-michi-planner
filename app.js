@@ -598,13 +598,6 @@ function renderPages() {
     document.getElementById("page-pills").after(autoBtn);
   }
 
-  // "+" add page pill
-  const addPill = document.createElement("button");
-  addPill.className = "page-pill add-page-pill";
-  addPill.textContent = "+ Page";
-  addPill.addEventListener("click", () => openAddPageModal());
-  pills.appendChild(addPill);
-
   // Theme suggestions
   renderSuggestions();
 
@@ -638,9 +631,15 @@ function renderPages() {
     </div>
   `;
 
-  // Change theme button — attach after innerHTML is set
+  // Buttons — attach after innerHTML is set
   document.getElementById("change-theme-btn").addEventListener("click", () => {
     openPageThemeModal(currentPage);
+  });
+  document.getElementById("add-page-btn").addEventListener("click", () => {
+    openAddPageModal();
+  });
+  document.getElementById("delete-page-btn").addEventListener("click", () => {
+    deletePage(currentPage);
   });
 
   // Pockets — with CSS grid span support

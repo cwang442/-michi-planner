@@ -136,9 +136,14 @@ body {
 .page-pills {
   display: flex;
   gap: 6px;
-  flex-wrap: wrap;
-  margin-bottom: 14px;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  margin-bottom: 10px;
+  padding-bottom: 4px;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
 }
+.page-pills::-webkit-scrollbar { display: none; }
 .page-pill {
   padding: 5px 12px;
   border-radius: 99px;
