@@ -245,21 +245,7 @@
       <button class="btn-ghost" id="theme-manager-close" style="width:100%;margin-top:12px">Done</button>
     </div>
   </div>
-    <!-- Debug error display -->
-  <div id="debug-panel" style="display:none;position:fixed;bottom:0;left:0;right:0;background:#1a0000;color:#ff6b6b;font-size:11px;padding:8px;z-index:9999;max-height:40vh;overflow:auto;font-family:monospace"></div>
-  <script>
-    window.onerror = function(msg, src, line, col, err) {
-      var p = document.getElementById("debug-panel");
-      p.style.display = "block";
-      p.innerHTML += "<div>❌ " + msg + "<br>at " + src.split("/").pop() + ":" + line + "</div>";
-    };
-    window.addEventListener("unhandledrejection", function(e) {
-      var p = document.getElementById("debug-panel");
-      p.style.display = "block";
-      p.innerHTML += "<div>❌ Promise: " + e.reason + "</div>";
-    });
-  </script>
-  <script src="app.js"></script>
+    <script src="app.js"></script>
   <script src="upload.js"></script>
 </body>
 </html>
