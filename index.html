@@ -162,16 +162,31 @@
           <label>Rarity</label>
           <select id="ce-rarity">
             <option>Special Illustration Rare</option>
+            <option>Hyper Rare</option>
             <option>Illustration Rare</option>
             <option>Art Rare</option>
             <option>Ultra Rare</option>
             <option>Double Rare</option>
-            <option>Hyper Rare</option>
             <option>Super Rare</option>
             <option>ACE SPEC Rare</option>
+            <option>Shiny Ultra Rare</option>
+            <option>Shiny Rare</option>
+            <option>Trainer Gallery</option>
+            <option>Amazing Rare</option>
+            <option>Radiant Rare</option>
+            <option>Triple Rare</option>
+            <option>Character Rare</option>
+            <option>Character Super Rare</option>
+            <option>Special Art Rare</option>
+            <option>K Rare</option>
             <option>Promo</option>
+            <option>Rare Holo</option>
             <option>Rare</option>
+            <option>Uncommon</option>
             <option>Common</option>
+            <option>Shiny Rare (CN)</option>
+            <option>Art Rare (CN)</option>
+            <option>RR (CN)</option>
           </select>
         </div>
         <div class="form-field">
@@ -200,6 +215,50 @@
       </div>
     </div>
   </div>
+
+  <!-- Page Theme Selector Modal -->
+  <div id="page-theme-modal" class="modal hidden">
+    <div class="modal-backdrop" id="page-theme-backdrop"></div>
+    <div class="modal-box">
+      <h3>Choose Page Theme</h3>
+      <div id="page-theme-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px"></div>
+    </div>
+  </div>
+
+  <!-- Theme Manager Modal -->
+  <div id="theme-manager-modal" class="modal hidden">
+    <div class="modal-backdrop" id="theme-manager-backdrop"></div>
+    <div class="modal-box">
+      <h3>Manage Themes</h3>
+      <div id="theme-manager-list" style="margin-bottom:14px"></div>
+      <div style="border-top:1px solid var(--border);padding-top:14px">
+        <p style="font-size:12px;color:var(--muted);margin-bottom:10px">Create a new theme</p>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <input id="new-theme-label" class="modal-input" placeholder="Theme name (e.g. Dark & Spooky)" />
+          <div style="display:flex;gap:8px">
+            <input id="new-theme-emoji" class="modal-input" placeholder="Emoji 🔮" style="width:80px;flex-shrink:0" maxlength="2" />
+            <input id="new-theme-color" type="color" value="#818CF8" style="width:48px;height:38px;border:1px solid var(--border);border-radius:6px;background:var(--surface);cursor:pointer;flex-shrink:0" />
+            <button id="create-theme-btn" class="btn-primary" style="flex:1">Create</button>
+          </div>
+        </div>
+      </div>
+      <button class="btn-ghost" id="theme-manager-close" style="width:100%;margin-top:12px">Done</button>
+    </div>
+  </div>
+    <!-- Debug error display -->
+  <div id="debug-panel" style="display:none;position:fixed;bottom:0;left:0;right:0;background:#1a0000;color:#ff6b6b;font-size:11px;padding:8px;z-index:9999;max-height:40vh;overflow:auto;font-family:monospace"></div>
+  <script>
+    window.onerror = function(msg, src, line, col, err) {
+      var p = document.getElementById("debug-panel");
+      p.style.display = "block";
+      p.innerHTML += "<div>❌ " + msg + "<br>at " + src.split("/").pop() + ":" + line + "</div>";
+    };
+    window.addEventListener("unhandledrejection", function(e) {
+      var p = document.getElementById("debug-panel");
+      p.style.display = "block";
+      p.innerHTML += "<div>❌ Promise: " + e.reason + "</div>";
+    });
+  </script>
   <script src="app.js"></script>
   <script src="upload.js"></script>
 </body>
