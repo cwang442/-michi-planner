@@ -477,6 +477,18 @@ function renderPages() {
     slotGrid.appendChild(div);
   });
 
+  // Set grid height dynamically so all rows are equal
+  // (width / 4 cols) * (3.5/2.5 card ratio) * 3 rows + gaps
+  requestAnimationFrame(() => {
+    const grid = document.getElementById("binder-grid");
+    if (grid) {
+      const w = grid.clientWidth - 20; // subtract padding
+      const cellW = (w - 7*3) / 4;    // 3 gaps between 4 cols
+      const cellH = cellW * (3.5/2.5);
+      grid.style.gridTemplateRows = `repeat(3, ${cellH}px)`;
+    }
+  });
+
   document.getElementById("collection-count").textContent = state.collection.length + " cards";
 }
 

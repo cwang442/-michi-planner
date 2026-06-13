@@ -216,7 +216,6 @@ body {
 
 /* ── Pocket ── */
 .pocket {
-  aspect-ratio: 2.5 / 3.5;
   border-radius: 6px;
   border: 2px solid var(--border);
   background: var(--surface);
@@ -224,6 +223,8 @@ body {
   overflow: hidden;
   position: relative;
   transition: transform 0.12s, box-shadow 0.12s;
+  min-height: 0;
+  min-width: 0;
 }
 .pocket:active { transform: scale(0.96); }
 .pocket.is-card { border-color: rgba(99,102,241,0.5); background: linear-gradient(135deg,#1e3a8a,#3730a3); }
