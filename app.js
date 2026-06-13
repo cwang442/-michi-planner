@@ -1,3 +1,4 @@
+// Michi Method Planner — app.js v4.1
 // ── Themes ─────────────────────────────────────────────────────────────────
 const DEFAULT_THEMES = {
   teamrocket:   { label:"Team Rocket",    emoji:"🚀", color:"#E63946" },
