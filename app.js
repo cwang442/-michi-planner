@@ -12,16 +12,31 @@ const THEMES = {
 
 const RARITY_COLORS = {
   "Special Illustration Rare": "#F59E0B",
-  "Illustration Rare":         "#818CF8",
-  "Art Rare":                  "#34D399",
-  "Ultra Rare":                "#48CAE4",
-  "Double Rare":               "#60A5FA",
-  "Hyper Rare":                "#FFAFCC",
-  "Super Rare":                "#A78BFA",
-  "ACE SPEC Rare":             "#F472B6",
-  "Promo":                     "#C084FC",
-  "Rare":                      "#94A3B8",
-  "Common":                    "#64748B",
+  "Hyper Rare": "#FFAFCC",
+  "Illustration Rare": "#818CF8",
+  "Art Rare": "#34D399",
+  "Ultra Rare": "#48CAE4",
+  "Double Rare": "#60A5FA",
+  "Super Rare": "#A78BFA",
+  "ACE SPEC Rare": "#F472B6",
+  "Shiny Ultra Rare": "#E879F9",
+  "Shiny Rare": "#C084FC",
+  "Trainer Gallery": "#F97316",
+  "Amazing Rare": "#10B981",
+  "Radiant Rare": "#FCD34D",
+  "Triple Rare": "#FBBF24",
+  "Character Rare": "#F87171",
+  "Character Super Rare": "#FB923C",
+  "Special Art Rare": "#818CF8",
+  "K Rare": "#A3E635",
+  "Promo": "#C084FC",
+  "Rare Holo": "#94A3B8",
+  "Rare": "#94A3B8",
+  "Uncommon": "#6EE7B7",
+  "Common": "#64748B",
+  "Shiny Rare (CN)": "#C084FC",
+  "Art Rare (CN)": "#34D399",
+  "RR (CN)": "#60A5FA",
 };
 
 // ── Default pages — empty slots, no hardcoded cards ────────────────────────
@@ -105,35 +120,36 @@ const DEFAULT_PAGES = [
     {type:"span",anchorIdx:10},
   ]},
 
-  // PAGE 6: Psyduck — melancholy rain, maximalist prints
-  // [c][P3x1][S  ][S  ]  1 card + 3-wide rainy panorama
-  // [P2x1][S][P2x1][S ]  two 2-wide prints middle
-  // [P4x1][S][S  ][S  ]  full 4-wide dramatic bottom
+  // PAGE 6: Psyduck — melancholy rain
+  // [c][P3x1][S  ][S  ]   card + 3-wide rainy top
+  // [P2x1][S][P2x1][S ]   two 2-wide prints middle
+  // [P2x1][S][P2x1][S ]   two 2-wide prints bottom
   { id:6, theme:"psyduck", label:"Psyduck", pct:0, slots:[
     {type:"card",cardId:null,name:""},
     {type:"print",name:"Psyduck rainy day art",search:"Psyduck rain puddle sad melancholy aesthetic illustration",url:"",span:{cols:3,rows:1}},
     {type:"span",anchorIdx:1},{type:"span",anchorIdx:1},
-    {type:"print",name:"Psyduck headache art",search:"Psyduck headache confused squinting cute art",url:"",span:{cols:2,rows:1}},
+    {type:"print",name:"Psyduck headache art",search:"Psyduck headache confused cute art",url:"",span:{cols:2,rows:1}},
     {type:"span",anchorIdx:4},
     {type:"print",name:"Misty and Psyduck art",search:"Misty Psyduck Pokemon anime together illustration",url:"",span:{cols:2,rows:1}},
     {type:"span",anchorIdx:6},
-    {type:"print",name:"Psyduck bathtub art",search:"Psyduck bathtub rubber duck cozy cute illustration art",url:"",span:{cols:4,rows:1}},
-    {type:"span",anchorIdx:8},{type:"span",anchorIdx:8},{type:"span",anchorIdx:8},
+    {type:"print",name:"Psyduck bathtub art",search:"Psyduck bathtub rubber duck cute cozy art",url:"",span:{cols:2,rows:1}},
+    {type:"span",anchorIdx:8},
+    {type:"print",name:"Psyduck vintage retro art",search:"Psyduck vintage retro 90s anime style illustration",url:"",span:{cols:2,rows:1}},
+    {type:"span",anchorIdx:10},
   ]},
 
-  // PAGE 7: Pikachu — electric burst, energetic
-  // [P4x1][S][S][S]   full 4-wide electric panorama top
-  // [c][c][P2x1][S]   cards + 2-wide middle
-  // [c][P1x2][c][c]   card + tall Pikachu portrait + cards
+  // PAGE 7: Pikachu — electric burst
+  // [c][c][P2x2][S  ]   cards left + 2x2 square print right
+  // [c][c][S   ][S  ]
+  // [P4x1][S][S][S  ]   full 4-wide electric panorama bottom
   { id:7, theme:"pikachu", label:"Pikachu", pct:0, slots:[
-    {type:"print",name:"Pikachu electric panorama",search:"Pikachu electric lightning bolt panorama anime aesthetic art",url:"",span:{cols:4,rows:1}},
-    {type:"span",anchorIdx:0},{type:"span",anchorIdx:0},{type:"span",anchorIdx:0},
     {type:"card",cardId:null,name:""},{type:"card",cardId:null,name:""},
-    {type:"print",name:"Pikachu Ash together",search:"Pikachu Ash Ketchum together Pokemon anime illustration art",url:"",span:{cols:2,rows:1}},
-    {type:"span",anchorIdx:6},
-    {type:"card",cardId:null,name:""},
-    {type:"print",name:"Pikachu forest portrait",search:"Pikachu sitting peaceful forest portrait illustration art",url:"",span:{cols:1,rows:2}},
+    {type:"print",name:"Pikachu forest sitting",search:"Pikachu sitting forest peaceful illustration art",url:"",span:{cols:2,rows:2}},
+    {type:"span",anchorIdx:2},
     {type:"card",cardId:null,name:""},{type:"card",cardId:null,name:""},
+    {type:"span",anchorIdx:2},{type:"span",anchorIdx:2},
+    {type:"print",name:"Pikachu Ash together",search:"Pikachu Ash Ketchum together anime illustration art",url:"",span:{cols:4,rows:1}},
+    {type:"span",anchorIdx:8},{type:"span",anchorIdx:8},{type:"span",anchorIdx:8},
   ]},
 
   // PAGE 8: Sleeping — cozy and warm
@@ -221,7 +237,7 @@ const DEFAULT_PAGES = [
 ];
 
 // ── Storage ─────────────────────────────────────────────────────────────────
-const LAYOUT_VERSION = "v3-spans"; // bump this when DEFAULT_PAGES layout changes
+const LAYOUT_VERSION = "v4-fixed"; // bump this when DEFAULT_PAGES layout changes
 
 // Load collection independently — never wiped by layout changes
 function loadCollection() {
