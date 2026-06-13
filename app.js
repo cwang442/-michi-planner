@@ -1,5 +1,5 @@
 // ── Themes ─────────────────────────────────────────────────────────────────
-const THEMES = {
+const DEFAULT_THEMES = {
   teamrocket:   { label:"Team Rocket",    emoji:"🚀", color:"#E63946" },
   eeveelutions: { label:"Eeveelutions",   emoji:"🌈", color:"#C084FC" },
   pink:         { label:"Pink Page",      emoji:"🩷", color:"#FFAFCC" },
@@ -9,6 +9,19 @@ const THEMES = {
   sleeping:     { label:"Sleeping",       emoji:"💤", color:"#818CF8" },
   water:        { label:"Water & Ocean",  emoji:"🌊", color:"#48CAE4" },
 };
+
+function loadThemes() {
+  try {
+    const saved = JSON.parse(localStorage.getItem("michi_themes"));
+    return saved || { ...DEFAULT_THEMES };
+  } catch(e) { return { ...DEFAULT_THEMES }; }
+}
+
+function saveThemes() {
+  localStorage.setItem("michi_themes", JSON.stringify(THEMES));
+}
+
+const THEMES = loadThemes();
 
 const RARITY_COLORS = {
   "Special Illustration Rare": "#F59E0B",
@@ -367,6 +380,57 @@ function autoSlotCollection() {
   showToast(`Auto-arranged ${used.size} cards across ${state.pages.length} pages`);
 }
 
+
+// ── Theme management ─────────────────────────────────────────────────────────
+function createTheme(id, label, emoji, color) {
+  THEMES[id] = { label, emoji, color };
+  saveThemes();
+}
+
+function deleteTheme(id) {
+  // Don't delete if any page uses it
+  const inUse = state.pages.some(p => p.theme === id);
+  if (inUse) return false;
+  delete THEMES[id];
+  saveThemes();
+  return true;
+}
+
+function renderThemeManager() {
+  const modal = document.getElementById("theme-manager-modal");
+  const list  = document.getElementById("theme-manager-list");
+  list.innerHTML = "";
+
+  Object.entries(THEMES).forEach(([id, theme]) => {
+    const inUse = state.pages.some(p => p.theme === id);
+    const row = document.createElement("div");
+    row.className = "theme-row";
+    row.innerHTML = `
+      <span style="font-size:18px">${theme.emoji}</span>
+      <span style="flex:1;font-size:13px;font-weight:600">${theme.label}</span>
+      <span style="width:16px;height:16px;border-radius:50%;background:${theme.color};display:inline-block;flex-shrink:0"></span>
+      ${inUse
+        ? `<span style="font-size:10px;color:var(--muted);flex-shrink:0">in use</span>`
+        : `<button class="delete-theme-btn" data-id="${id}" style="background:none;border:1px solid #F8717144;color:#F87171;border-radius:6px;padding:2px 8px;font-size:11px;cursor:pointer">Remove</button>`
+      }
+    `;
+    list.appendChild(row);
+  });
+
+  list.querySelectorAll(".delete-theme-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const id = btn.dataset.id;
+      if (deleteTheme(id)) {
+        renderThemeManager();
+        renderPages();
+        showToast("Theme removed");
+      }
+    });
+  });
+
+  modal.classList.remove("hidden");
+}
+
 // ── Pages tab ────────────────────────────────────────────────────────────────
 function renderPages() {
   const pills = document.getElementById("page-pills");
@@ -389,6 +453,11 @@ function renderPages() {
   const printCount = pg.slots.filter(s => s.type === "print").length;
   const emptyCount = pg.slots.filter(s => s.type === "empty" || !s.type).length;
 
+  // Change theme button
+  document.getElementById("change-theme-btn").addEventListener("click", () => {
+    openPageThemeModal(currentPage);
+  });
+
   // Auto-arrange button
   let autoBtn = document.getElementById("auto-arrange-btn");
   if (!autoBtn) {
@@ -410,6 +479,7 @@ function renderPages() {
         <span class="page-theme-badge" style="background:${color}22;border:1px solid ${color}44;color:${color}">
           ${te(pg.theme)} ${pg.label}
         </span>
+        <button id="change-theme-btn" style="margin-top:6px;background:none;border:1px solid var(--border);color:var(--muted);border-radius:6px;padding:4px 10px;font-size:11px;cursor:pointer">Change theme</button>
         <div class="progress-bar"><div class="progress-fill" style="width:${pct}%;background:${color}"></div></div>
         <p class="progress-label">${pct}% complete</p>
       </div>
@@ -678,6 +748,43 @@ function openCardEditModal(cardId) {
 // ── Slot modal (pages tab) ───────────────────────────────────────────────────
 let editingSlot = null;
 
+
+function openPageThemeModal(pageIdx) {
+  const modal = document.getElementById("page-theme-modal");
+  const grid  = document.getElementById("page-theme-grid");
+  grid.innerHTML = "";
+
+  Object.entries(THEMES).forEach(([id, theme]) => {
+    const btn = document.createElement("button");
+    btn.className = "theme-choice-btn" + (state.pages[pageIdx].theme === id ? " active" : "");
+    btn.style.cssText = `border-color:${theme.color};color:${theme.color};background:${state.pages[pageIdx].theme===id?theme.color+"33":"transparent"}`;
+    btn.innerHTML = `<span style="font-size:20px">${theme.emoji}</span><span style="font-size:11px;font-weight:600;margin-top:3px">${theme.label}</span>`;
+    btn.addEventListener("click", () => {
+      state.pages[pageIdx].theme  = id;
+      state.pages[pageIdx].label  = theme.label;
+      saveState();
+      modal.classList.add("hidden");
+      renderPages();
+      showToast(`Page theme set to ${theme.label}`);
+    });
+    grid.appendChild(btn);
+  });
+
+  // Manage themes link
+  const manage = document.createElement("button");
+  manage.className = "btn-ghost";
+  manage.style.cssText = "width:100%;margin-top:10px;font-size:12px";
+  manage.textContent = "✏️ Create or manage themes";
+  manage.addEventListener("click", () => {
+    modal.classList.add("hidden");
+    renderThemeManager();
+  });
+  grid.appendChild(manage);
+
+  document.getElementById("page-theme-backdrop").addEventListener("click", () => modal.classList.add("hidden"));
+  modal.classList.remove("hidden");
+}
+
 function openSlotModal(pageIdx, slotIdx) {
   const slot = state.pages[pageIdx].slots[slotIdx];
   // If tapped a span cell, redirect to its anchor
@@ -810,6 +917,29 @@ function showToast(msg) {
 }
 
 // ── Init ──────────────────────────────────────────────────────────────────────
+
+// Theme manager modal listeners
+document.getElementById("create-theme-btn").addEventListener("click", () => {
+  const label = document.getElementById("new-theme-label").value.trim();
+  const emoji = document.getElementById("new-theme-emoji").value.trim() || "⭐";
+  const color = document.getElementById("new-theme-color").value;
+  if (!label) { showToast("Enter a theme name"); return; }
+  const id = label.toLowerCase().replace(/[^a-z0-9]/g, "");
+  if (THEMES[id]) { showToast("Theme already exists"); return; }
+  createTheme(id, label, emoji, color);
+  document.getElementById("new-theme-label").value = "";
+  document.getElementById("new-theme-emoji").value = "";
+  renderThemeManager();
+  showToast(`Theme "${label}" created!`);
+});
+
+document.getElementById("theme-manager-close").addEventListener("click", () => {
+  document.getElementById("theme-manager-modal").classList.add("hidden");
+});
+document.getElementById("theme-manager-backdrop").addEventListener("click", () => {
+  document.getElementById("theme-manager-modal").classList.add("hidden");
+});
+
 renderPages();
 renderCollection();
 renderPrints();
