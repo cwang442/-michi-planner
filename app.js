@@ -1,3 +1,4 @@
+// ── State ──────────────────────────────────────────────────────────────────
 const THEMES = {
   teamrocket: { label:"Team Rocket",    emoji:"🚀", color:"#E63946" },
   eeveelutions:{ label:"Eeveelutions", emoji:"🌈", color:"#C084FC" },
@@ -226,7 +227,6 @@ function renderPages() {
     pills.appendChild(btn);
   });
 
-  // Suggestions
   renderSuggestions();
 
   // Page view
@@ -248,9 +248,9 @@ function renderPages() {
         </div>
         <p class="progress-label">${pg.pct}% complete</p>
       </div>
-      <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap">
-        <button onclick="openAddPageModal()" style="background:none;border:1px solid #818CF855;color:#818CF8;border-radius:6px;padding:5px 12px;font-size:12px;cursor:pointer">＋ Add page</button>
-        <button onclick="deletePage(${currentPage})" style="background:none;border:1px solid #F8717133;color:#F87171;border-radius:6px;padding:5px 12px;font-size:12px;cursor:pointer">🗑 Delete</button>
+      <div style="display:flex;gap:6px;margin-top:8px">
+        <button onclick="addPage(state.pages[currentPage].theme)" style="background:none;border:1px solid #818CF855;color:#818CF8;border-radius:6px;padding:5px 12px;font-size:12px;cursor:pointer">＋ Add page</button>
+        <button onclick="deletePage(currentPage)" style="background:none;border:1px solid #F8717133;color:#F87171;border-radius:6px;padding:5px 12px;font-size:12px;cursor:pointer">🗑 Delete</button>
       </div>
       <div class="page-stats">
         <div class="stat-box"><div class="stat-num" style="color:#818CF8">${cardCount}</div><div class="stat-lbl">Cards</div></div>
@@ -380,7 +380,86 @@ document.getElementById("clear-collection").addEventListener("click", () => {
   }
 });
 
-// ── Upload tab — handled by upload.js ──────────────────────────────────────
+// ── Upload tab ──────────────────────────────────────────────────────────────
+const uploadBtn  = document.getElementById("upload-btn");
+const fileInput  = document.getElementById("file-input");
+const previewDiv = document.getElementById("upload-preview");
+const cardForm   = document.getElementById("card-form");
+
+uploadBtn.addEventListener("click", () => fileInput.click());
+fileInput.addEventListener("change", e => handleFiles(e.target.files));
+
+const uploadZone = document.getElementById("upload-zone");
+uploadZone.addEventListener("dragover", e => { e.preventDefault(); uploadZone.classList.add("drag-over"); });
+uploadZone.addEventListener("dragleave", () => uploadZone.classList.remove("drag-over"));
+uploadZone.addEventListener("drop", e => { e.preventDefault(); uploadZone.classList.remove("drag-over"); handleFiles(e.dataTransfer.files); });
+
+function handleFiles(files) {
+  Array.from(files).filter(f => f.type.startsWith("image/")).forEach(file => {
+    const reader = new FileReader();
+    reader.onload = e => {
+      pendingImages.push({ url: e.target.result, name: file.name });
+      renderUploadPreview();
+      cardForm.classList.remove("hidden");
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+function renderUploadPreview() {
+  previewDiv.innerHTML = "";
+  pendingImages.forEach((img, i) => {
+    const wrap = document.createElement("div");
+    wrap.className = "preview-thumb";
+    wrap.innerHTML = `<img src="${img.url}" alt="${img.name}" /><button>×</button>`;
+    wrap.querySelector("button").addEventListener("click", () => {
+      pendingImages.splice(i, 1);
+      renderUploadPreview();
+      if (!pendingImages.length) cardForm.classList.add("hidden");
+    });
+    previewDiv.appendChild(wrap);
+  });
+}
+
+document.getElementById("save-card").addEventListener("click", () => {
+  const name  = document.getElementById("card-name").value.trim();
+  const set   = document.getElementById("card-set").value.trim();
+  const rarity= document.getElementById("card-rarity").value;
+  const price = document.getElementById("card-price").value;
+  const theme = document.getElementById("card-theme").value;
+
+  if (!name) { alert("Please enter a card name."); return; }
+
+  const card = {
+    id: Date.now() + Math.random(),
+    name, set, rarity, price, theme,
+    image: pendingImages[0]?.url || null
+  };
+
+  state.collection.push(card);
+  saveState();
+
+  // Reset
+  pendingImages = [];
+  previewDiv.innerHTML = "";
+  cardForm.classList.add("hidden");
+  document.getElementById("card-name").value = "";
+  document.getElementById("card-set").value = "";
+  document.getElementById("card-price").value = "";
+  document.getElementById("card-theme").value = "";
+  fileInput.value = "";
+
+  renderCollection();
+  renderPages();
+  alert(`"${card.name}" added to your collection!`);
+});
+
+document.getElementById("cancel-card").addEventListener("click", () => {
+  pendingImages = [];
+  previewDiv.innerHTML = "";
+  cardForm.classList.add("hidden");
+  fileInput.value = "";
+});
 
 // ── Prints tab ──────────────────────────────────────────────────────────────
 function renderPrints() {
@@ -542,10 +621,18 @@ document.getElementById("modal-save").addEventListener("click", () => {
 
 
 // ── Page management ───────────────────────────────────────────────────────────
+function showToast(msg) {
+  const t = document.createElement("div");
+  t.textContent = msg;
+  t.style.cssText = "position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#1A1A2E;color:#E2E2F0;border:1px solid #2d2d48;border-radius:8px;padding:8px 16px;font-size:12px;z-index:999;pointer-events:none;white-space:nowrap";
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 2500);
+}
+
 function deletePage(pageIdx) {
   if (state.pages.length <= 1) { showToast("Can't delete the last page"); return; }
   const pg = state.pages[pageIdx];
-  if (!confirm(`Delete "${pg.label}" page?`)) return;
+  if (!confirm('Delete "' + pg.label + '" page?')) return;
   state.pages.splice(pageIdx, 1);
   if (currentPage >= state.pages.length) currentPage = state.pages.length - 1;
   saveState();
@@ -566,24 +653,14 @@ function addPage(themeId) {
   currentPage = state.pages.length - 1;
   saveState();
   renderPages();
-  showToast(`Added ${theme.emoji} ${theme.label} page`);
+  showToast(theme.emoji + " " + theme.label + " page added");
 }
 
-function showToast(msg) {
-  const t = document.createElement("div");
-  t.textContent = msg;
-  t.style.cssText = "position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#1A1A2E;color:#E2E2F0;border:1px solid #2d2d48;border-radius:8px;padding:8px 16px;font-size:12px;z-index:999;pointer-events:none";
-  document.body.appendChild(t);
-  setTimeout(() => t.remove(), 2500);
-}
-
-
-// ── Theme suggestions ─────────────────────────────────────────────────────────
 function renderSuggestions() {
   const container = document.getElementById("theme-suggestions");
   if (!container) return;
 
-  // Count unassigned cards per theme
+  // Find themes that have unassigned cards but no page
   const assignedIds = new Set();
   state.pages.forEach(pg => pg.slots.forEach(s => { if (s.cardId) assignedIds.add(s.cardId); }));
 
@@ -594,7 +671,6 @@ function renderSuggestions() {
     }
   });
 
-  // Find themes with waiting cards that have no page
   const suggestions = Object.entries(waiting)
     .filter(([theme]) => !state.pages.some(p => p.theme === theme))
     .sort((a, b) => b[1] - a[1])
@@ -606,33 +682,21 @@ function renderSuggestions() {
   }
 
   container.style.display = "block";
-  container.innerHTML = '<div style="font-size:11px;color:var(--muted);font-weight:700;margin-bottom:6px">💡 Suggested pages based on your collection</div>' +
+  container.innerHTML = '<div style="font-size:11px;color:var(--muted);font-weight:700;margin-bottom:6px">💡 Suggested pages</div>' +
     suggestions.map(([themeId, count]) => {
       const theme = THEMES[themeId];
       if (!theme) return "";
-      return `<div style="display:flex;align-items:center;gap:8px;padding:7px 10px;border:1px solid ${theme.color}33;border-radius:8px;margin-bottom:5px;background:${theme.color}0a">
-        <span style="flex:1;font-size:12px;font-weight:600">${theme.emoji} ${theme.label}</span>
-        <span style="font-size:10px;color:${theme.color};font-weight:700">${count} card${count>1?"s":""} waiting</span>
-        <button onclick="addPage('${themeId}')" style="background:${theme.color}33;border:1px solid ${theme.color}55;color:${theme.color};border-radius:6px;padding:3px 8px;font-size:11px;cursor:pointer">+ Add page</button>
-      </div>`;
+      return '<div style="display:flex;align-items:center;gap:8px;padding:7px 10px;border:1px solid ' + theme.color + '33;border-radius:8px;margin-bottom:5px">' +
+        '<span style="flex:1;font-size:12px;font-weight:600">' + theme.emoji + ' ' + theme.label + '</span>' +
+        '<span style="font-size:10px;color:' + theme.color + ';font-weight:700">' + count + ' card' + (count>1?'s':'') + ' waiting</span>' +
+        '<button data-theme="' + themeId + '" class="suggest-add-btn" style="background:' + theme.color + '33;border:1px solid ' + theme.color + '55;color:' + theme.color + ';border-radius:6px;padding:3px 8px;font-size:11px;cursor:pointer">+ Add page</button>' +
+        '</div>';
     }).join("");
-}
 
-
-function openAddPageModal() {
-  const modal = document.getElementById("add-page-modal");
-  if (!modal) return;
-  const grid = document.getElementById("add-page-theme-grid");
-  grid.innerHTML = "";
-  Object.entries(THEMES).forEach(([id, theme]) => {
-    const btn = document.createElement("button");
-    btn.style.cssText = `display:flex;flex-direction:column;align-items:center;padding:10px 6px;border:2px solid ${theme.color};color:${theme.color};background:transparent;border-radius:10px;cursor:pointer;gap:4px`;
-    btn.innerHTML = `<span style="font-size:20px">${theme.emoji}</span><span style="font-size:11px;font-weight:600">${theme.label}</span>`;
-    btn.addEventListener("click", () => { modal.classList.add("hidden"); addPage(id); });
-    grid.appendChild(btn);
+  // Wire up the add buttons
+  container.querySelectorAll(".suggest-add-btn").forEach(btn => {
+    btn.addEventListener("click", () => addPage(btn.dataset.theme));
   });
-  modal.classList.remove("hidden");
-  document.getElementById("add-page-backdrop").onclick = () => modal.classList.add("hidden");
 }
 
 // ── Init ────────────────────────────────────────────────────────────────────
