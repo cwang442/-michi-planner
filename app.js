@@ -1,4 +1,19 @@
 // Michi Method Planner — app.js
+
+// Fix binder grid CSS conflict injected via JS since style.css upload fails
+(function() {
+  const style = document.createElement("style");
+  style.textContent = `
+    .pocket { aspect-ratio: unset !important; min-height: 0; min-width: 0; }
+    .binder-grid { aspect-ratio: unset !important; height: 320px; }
+    @media (min-width: 600px) { .binder-grid { height: 400px; } }
+    @media (min-width: 900px) { .binder-grid { height: 480px; } }
+    .page-pills { flex-wrap: nowrap !important; overflow-x: auto !important; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+    .page-pills::-webkit-scrollbar { display: none; }
+  `;
+  document.head.appendChild(style);
+})();
+
 // ── Themes ─────────────────────────────────────────────────────────────────
 const DEFAULT_THEMES = {
   teamrocket:   { label:"Team Rocket",    emoji:"🚀", color:"#E63946" },
